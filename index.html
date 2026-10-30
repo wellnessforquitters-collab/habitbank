@@ -357,6 +357,21 @@ input.f:focus{border-bottom-color:var(--acc)}
 
 .inst{margin-top:16px;padding:22px 18px 18px;gap:18px}
 .iv{gap:6px}
+
+/* week table: 7 days fit the screen */
+.tk-wrap{overflow:hidden}
+.tk.wk{width:100%;table-layout:fixed}
+.tk.wk th,.tk.wk td.d{min-width:0;width:auto}
+.tk.wk .nm{width:34%;min-width:0;max-width:none}
+.tk.wk th{height:44px;line-height:1.1}
+.tk.wk th small{display:block;font-size:9px;letter-spacing:.08em;color:#aaa;text-transform:uppercase;margin-bottom:2px}
+.tk.wk th.perfect small,.tk.wk th.today small{color:inherit;opacity:.8}
+.tk.wk tr.add td{height:44px}
+
+/* game bits */
+.gtag{font-size:12px;letter-spacing:.06em;color:var(--acc);margin-left:8px;font-weight:500}
+.tdy .nm2 small.stk{display:block;font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:0}
+.card .tier.bk{color:#ff6b66;opacity:1}
 </style>
 </head>
 <body>
@@ -381,7 +396,7 @@ const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&g
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||"null")||d}catch(e){return d}};
 const START=1000,VALUE=100;
 let H=Object.assign({unlocked:false,key:"",start:START,rows:[],checks:{},onboarded:false,seen:"",updated:0},load("habitbank",{}));
-H.start=START;H.rows.forEach(r=>{if(!r.value)r.value=VALUE});delete H.reward;
+H.start=START;if(!H.seed){H.seed=Math.floor(Math.random()*1e9)}if(!H.passes)H.passes=0;if(!H.sick)H.sick={};if(!H.spent)H.spent=[];H.rows.forEach(r=>{if(!r.value)r.value=VALUE});delete H.reward;
 const pack=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 const unpack=t=>JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g,"+").replace(/_/g,"/")))));
 const IOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -398,8 +413,18 @@ const money=n=>(n<0?"−$":"$")+Math.abs(Math.round(n)).toLocaleString("en-US");
 const active=(r,day)=>day>=r.from&&(!r.to||day<r.to);
 const done=(r,day)=>!!((H.checks[r.id]||{})[day]);
 // balance at the end of a given day (past days count misses; today counts only ticks)
+/* game rules: streak interest, double pay days, sick days */
+const SICK_PRICE=300;
+const isSick=k=>!!(H.sick||{})[k];
+const dbl=k=>{let h=2166136261^(H.seed||7);for(const ch of k){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return ((h>>>0)%9)===0};
+const streakAt=(r,k)=>{let n=0,d=k;while(d>=r.from&&active(r,d)&&(done(r,d)||isSick(d))){if(done(r,d))n++;d=addDays(d,-1)}return n};
+const bonusFor=n=>n>=30?.25:n>=7?.1:0;
+const earnOn=(r,k)=>Math.round(r.value*(1+bonusFor(streakAt(r,k)))*(dbl(k)?2:1));
+const nextEarn=(r,k)=>Math.round(r.value*(1+bonusFor(streakAt(r,addDays(k,-1))+1))*(dbl(k)?2:1));
+const loseOn=(r,k)=>isSick(k)?0:r.value;
 function balanceAt(day){let b=H.start;const t=today();
-  H.rows.forEach(r=>{let d=r.from;while(d<=day){if(active(r,d)){if(done(r,d))b+=r.value;else if(d<t)b-=r.value}d=addDays(d,1)}});return b}
+  H.rows.forEach(r=>{let d=r.from;while(d<=day){if(active(r,d)){if(done(r,d))b+=earnOn(r,d);else if(d<t)b-=loseOn(r,d)}d=addDays(d,1)}});
+  (H.spent||[]).forEach(x=>{if(x.d<=day)b-=x.a});return b}
 const balanceNow=()=>balanceAt(today());
 
 /* ===== ui utils ===== */
@@ -423,6 +448,8 @@ const MONTHS=["january","february","march","april","may","june","july","august",
 const daysIn=m=>{const[y,mo]=m.split("-").map(Number);return new Date(y,mo,0).getDate()};
 const shiftM=(m,d)=>{const[y,mo]=m.split("-").map(Number);const x=new Date(y,mo-1+d,1);return x.getFullYear()+"-"+pad(x.getMonth()+1)};
 let viewM=today().slice(0,7);
+const weekStart=k=>{const d=new Date(k+"T12:00");return addDays(k,-((d.getDay()+6)%7))};
+let viewW=null;
 
 /* ===== screens ===== */
 const LANDING=()=>location.hash==="#landing";
@@ -539,7 +566,7 @@ function weekBars(m){const n=daysIn(m),[y,mo]=m.split("-").map(Number),t=today()
 const TIERS=[{k:"black",min:-Infinity,label:""},{k:"silver",min:5000,label:"silver"},{k:"gold",min:10000,label:"gold"},{k:"metal",min:25000,label:"black metal"}];
 const tierOf=b=>{let t=0;TIERS.forEach((x,i)=>{if(b>=x.min)t=i});return t};
 function cardHTML(bal,todayChg,shown){const ti=tierOf(bal),T=TIERS[ti];
-  return `<div class="card t-${T.k}" id="card"><div class="tp"><span>habit bank</span><span>${T.label?`<span class="tier">${T.label}</span>`:""}<b>✦</b></span></div>
+  return `<div class="card t-${T.k}" id="card"><div class="tp"><span>habit bank</span><span>${bal<0?'<span class="tier bk">bankrupt</span>':T.label?`<span class="tier">${T.label}</span>`:""}<b>✦</b></span></div>
     <div><div class="lab">balance</div><div class="amt${bal<0?" neg":""}" id="amt">${money(shown)}</div></div>
     <div class="bt"><span>${todayChg>=0?`<span class="up">+${money(todayChg)}</span>`:`<span class="down">${money(todayChg)}</span>`} today</span><span class="${H.name?"nmc":"num"}">${H.name?esc(H.name):"•••• "+new Date().getFullYear()}</span></div></div>
   ${H.name?"":'<p class="cardhint">tap the card to put your name on it</p>'}`}
@@ -548,8 +575,11 @@ function checkTier(bal){const ti=tierOf(bal);if(H.tierSeen===undefined){H.tierSe
   else if(ti<H.tierSeen){H.tierSeen=ti;save(false)}}
 function openCard(){const cur=tierOf(balanceNow());
   openSheet(`<h2>name on your card</h2><input class="f" id="cn" maxlength="18" placeholder="your name" value="${esc(H.name||"")}" autocomplete="off">
+  <h2 style="margin-top:8px">sick days</h2><p class="small muted" style="margin:0">a sick day covers one whole day: nothing is lost and your streaks stay. use it today or for yesterday. you have <b style="color:var(--fg)">${H.passes}</b>.</p>
+  <button class="btn ghost" id="buyS" ${balanceNow()<SICK_PRICE?"disabled":""}>buy a sick day · ${money(SICK_PRICE)}</button>
   <h2 style="margin-top:8px">your cards</h2><div class="tiers">${TIERS.map((t,i)=>`<div class="tr"><span class="card t-${t.k} sw" style="padding:0;aspect-ratio:auto;box-shadow:none;cursor:default;max-width:none;margin:0"></span><span>${t.label||"black"}${i===cur?" ✦":""}</span><span class="muted small">${i===0?"from the start":"from "+money(t.min)}</span></div>`).join("")}</div>
   <div class="row2"><button class="btn ghost" id="cx">close</button><button class="btn" id="cs">save</button></div>`);
+  $("#buyS").onclick=()=>{if(balanceNow()<SICK_PRICE)return;H.spent.push({d:today(),a:SICK_PRICE});H.passes++;save();closeSheet();toast("sick day bought ✦ you have "+H.passes);renderMain(false)};
   $("#cx").onclick=closeSheet;$("#cs").onclick=()=>{H.name=$("#cn").value.trim().slice(0,18);save();closeSheet();renderMain(false)}}
 /* ===== moodboard ===== */
 const LAYS=[
@@ -618,6 +648,7 @@ function bindInstall(){const a=$("#inst"),x=$("#instx");
   if(x)x.onclick=()=>{H.installDone=true;save(false);renderMain(false)}}
 
 function renderMain(scroll=true){
+  if(!viewW)viewW=weekStart(today());viewM=addDays(viewW,3).slice(0,7);
   const t=today(),bal=balanceNow(),m=viewM,[y,mo]=m.split("-").map(Number),n=daysIn(m);
   const monthStart=m+"-01",before=balanceAt(addDays(monthStart,-1)),chg=bal-before;
   const yest=balanceAt(addDays(t,-1)),todayChg=bal-yest;
@@ -625,26 +656,29 @@ function renderMain(scroll=true){
   let h=`${header()}
   ${cardHTML(bal,todayChg,lastBal===null?bal:lastBal)}${installCard()}`;
   let settle="";
-  if(yRows.length&&H.seen!==t){let gain=0,lost=0,missed=[];yRows.forEach(r=>{if(done(r,yd))gain+=r.value;else{lost+=r.value;missed.push(r.name)}});
+  if(yRows.length&&H.seen!==t){let gain=0,lost=0,missed=[];yRows.forEach(r=>{if(done(r,yd))gain+=earnOn(r,yd);else if(!isSick(yd)){lost+=r.value;missed.push(r.name)}});
     settle=`<div class="settle"><span class="lab" style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">yesterday's statement</span>
       <div class="big2">${gain-lost>=0?"+":"−"}${money(Math.abs(gain-lost))}</div>
-      <div class="ln">earned ${money(gain)}${lost?` · lost <b>${money(lost)}</b> (${missed.map(esc).join(", ")})`:" · nothing lost ✦"}</div>
+      <div class="ln">earned ${money(gain)}${isSick(yd)?" · sick day, nothing lost ✦":lost?` · lost <b>${money(lost)}</b> (${missed.map(esc).join(", ")})`:" · nothing lost ✦"}</div>
+      ${lost&&H.passes>0&&!isSick(yd)?`<button class="link" id="sickY" style="align-self:flex-start">were you sick? use a sick day (${H.passes} left)</button>`:""}
       <button class="link" id="seen" style="align-self:flex-start">got it</button></div>`}
   const tRows=H.rows.filter(r=>active(r,t));
-  h+=`<div><h2 style="margin-bottom:8px">today</h2><div class="todaylist">${tRows.map(r=>`<button class="tdy${done(r,t)?" on":""}${justKey===r.id+"|"+t?" just":""}" data-t="${r.id}"><span class="bx">${TICK}</span><span class="nm2">${esc(r.name)}</span><span class="v">+${money(r.value)}</span></button>`).join("")}
-    ${H.rows.filter(r=>!r.to).length<10?'<button class="tdy" id="add0" style="color:var(--muted)"><span class="bx" style="border-style:dashed;border-color:#bbb"></span><span class="nm2">add a habit</span><span></span></button>':""}</div></div>`;
-  // month table
-  h+=`<div class="top"><div><p class="kick" style="margin:0 0 2px">✦ this month</p><h1 style="font-size:30px">${MONTHS[mo-1]}</h1></div><div class="arrows"><button id="mp" aria-label="previous month">←</button><button id="mn" aria-label="next month">→</button></div></div>`;
-  const rows=H.rows.filter(r=>r.from<=m+"-"+pad(n)&&(!r.to||r.to>monthStart));
-  h+=`<div class="tk-wrap" id="tkw"><table class="tk"><tr><th class="nm"></th>`;
-  for(let day=1;day<=n;day++){const k=m+"-"+pad(day),pf=k<=t&&perfect(k);h+=`<th class="${pf?"perfect":k===t?"today":""}">${pf?"✦":day}</th>`}
+  h+=`<div><h2 style="margin-bottom:8px">today${isSick(t)?' <span class="gtag">✦ sick day · nothing will be lost</span>':dbl(t)?' <span class="gtag">✦ double pay day</span>':""}</h2><div class="todaylist">${tRows.map(r=>`<button class="tdy${done(r,t)?" on":""}${justKey===r.id+"|"+t?" just":""}" data-t="${r.id}"><span class="bx">${TICK}</span><span class="nm2">${esc(r.name)}${(()=>{const st=done(r,t)?streakAt(r,t):streakAt(r,addDays(t,-1));const b=bonusFor(done(r,t)?st:st+1);return st>=2?`<small class="stk">${st} days in a row${b?` · +${Math.round(b*100)}%`:""}</small>`:""})()}</span><span class="v">+${money(done(r,t)?earnOn(r,t):nextEarn(r,t))}</span></button>`).join("")}
+    ${H.rows.filter(r=>!r.to).length<10?'<button class="tdy" id="add0" style="color:var(--muted)"><span class="bx" style="border-style:dashed;border-color:#bbb"></span><span class="nm2">add a habit</span><span></span></button>':""}</div>${H.passes>0&&!isSick(t)&&tRows.length?`<button class="link" id="sickT" style="margin-top:8px;font-size:13px">sick today? use a sick day (${H.passes} left)</button>`:""}</div>`;
+  // week table (7 days, fits the screen, no sideways scroll)
+  const days=[...Array(7)].map((_,i)=>addDays(viewW,i)),curW=viewW===weekStart(t);
+  const dlab=k=>{const d=new Date(k+"T12:00");return MONTHS[d.getMonth()].slice(0,3)+" "+d.getDate()};
+  h+=`<div class="top"><div><p class="kick" style="margin:0 0 2px">✦ ${curW?"this week":"week"}${curW?"":` <button class="link" id="tw" style="font-size:12px;margin-left:6px;letter-spacing:0;text-transform:none">back to this week</button>`}</p><h1 style="font-size:28px">${dlab(days[0])} – ${dlab(days[6])}</h1></div><div class="arrows"><button id="mp" aria-label="previous week">←</button><button id="mn" aria-label="next week">→</button></div></div>`;
+  const rows=H.rows.filter(r=>r.from<=days[6]&&(!r.to||r.to>days[0]));
+  h+=`<div class="tk-wrap" id="tkw"><table class="tk wk"><tr><th class="nm"></th>`;
+  days.forEach((k,i)=>{const pf=k<=t&&perfect(k),d=new Date(k+"T12:00").getDate();h+=`<th class="${pf?"perfect":k===t?"today":""}"><small>${"mtwtfss"[i]}</small>${pf?"✦":d}</th>`});
   h+=`</tr>`;
-  rows.forEach(r=>{let earned=0,dn=0,poss=0;for(let day=1;day<=n;day++){const k=m+"-"+pad(day);if(!active(r,k)||k>t)continue;poss++;if(done(r,k)){earned+=r.value;dn++}else if(k<t)earned-=r.value}
+  rows.forEach(r=>{let earned=0,dn=0,poss=0;days.forEach(k=>{if(!active(r,k)||k>t)return;poss++;if(done(r,k)){earned+=earnOn(r,k);dn++}else if(k<t)earned-=loseOn(r,k)});
     h+=`<tr><td class="nm" data-row="${r.id}">${esc(r.name)}<small>${earned>=0?"+":""}${money(earned)} · ${dn}/${poss}</small></td>`;
-    for(let day=1;day<=n;day++){const k=m+"-"+pad(day),fut=k>t,off=!active(r,k),dn=done(r,k),miss=!fut&&!off&&!dn&&k<t;
-      h+=`<td class="d${dn?" on":""}${justKey===r.id+"|"+k?" just":""}${miss?" miss":""}${off?" off":""}${fut?" future":""}${k===t?" today":""}" data-r="${r.id}" data-k="${k}">${TICK}</td>`}
+    days.forEach(k=>{const fut=k>t,off=!active(r,k),dn=done(r,k),miss=!fut&&!off&&!dn&&k<t&&!isSick(k);
+      h+=`<td class="d${dn?" on":""}${justKey===r.id+"|"+k?" just":""}${miss?" miss":""}${off?" off":""}${fut?" future":""}${k===t?" today":""}" data-r="${r.id}" data-k="${k}">${TICK}</td>`});
     h+=`</tr>`});
-  if(H.rows.filter(r=>!r.to).length<10)h+=`<tr class="add"><td class="nm" id="add">+ add a habit</td><td colspan="${n}" id="add2"></td></tr>`;
+  if(H.rows.filter(r=>!r.to).length<10)h+=`<tr class="add"><td class="nm" id="add">+ add a habit</td><td colspan="7" id="add2"></td></tr>`;
   h+=`</table></div>`+moodHTML()+settle;
   const wb=weekBars(m);
   h+=`<div><h2 style="margin-bottom:10px">weekly progress</h2><div class="bars">${wb.map(w=>`<div class="bar"><span>${w.has?w.pct+"%":""}</span><i class="${w.curW?"cur":""}" data-h="${w.pct}"></i></div>`).join("")}</div>
@@ -653,7 +687,7 @@ function renderMain(scroll=true){
   h+=`<div><h2>statement</h2><div class="tx">`;
   for(let i=0;i<3;i++){const k=addDays(t,-i);const items=H.rows.filter(r=>active(r,k));if(!items.length)continue;
     h+=`<div class="d">${i===0?"today":i===1?"yesterday":new Date(k+"T12:00").toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"}).toLowerCase()}</div>`;
-    items.forEach(r=>{const dn=done(r,k);h+=`<div class="r"><span>${esc(r.name)}</span><span class="p${dn?"":i===0?" pend":" minus"}">${dn?"+"+money(r.value):i===0?"pending":"−"+money(r.value).replace("$","$")}</span></div>`})}
+    items.forEach(r=>{const dn=done(r,k);h+=`<div class="r"><span>${esc(r.name)}</span><span class="p${dn?"":i===0?" pend":" minus"}">${dn?"+"+money(earnOn(r,k)):i===0?"pending":isSick(k)?"sick day":"−"+money(r.value)}</span></div>`})}
   h+=`</div></div>`;
   h+=`<button class="btn ghost" id="stmt">my monthly statement</button>
   <p class="closing">keep going.</p>
@@ -662,19 +696,26 @@ function renderMain(scroll=true){
   countUp($("#amt"),lastBal,bal);lastBal=bal;justKey=null;checkTier(bal);$("#card").onclick=openCard;bindMood();
   requestAnimationFrame(()=>{document.querySelectorAll(".bar i").forEach(i=>i.style.height=i.dataset.h+"%");const mb=document.querySelector(".mbar i");if(mb)mb.style.width=mb.dataset.w+"%"});
   if(scroll){const th=document.querySelector(".tk th.today"),w=$("#tkw");if(th&&w)w.scrollLeft=Math.max(0,th.offsetLeft-160)}
-  $("#mp").onclick=()=>{viewM=shiftM(viewM,-1);renderMain()};
-  $("#mn").onclick=()=>{viewM=shiftM(viewM,1);renderMain()};
+  $("#mp").onclick=()=>{viewW=addDays(viewW,-7);renderMain(false)};
+  $("#mn").onclick=()=>{viewW=addDays(viewW,7);renderMain(false)};
+  {const tw=$("#tw");if(tw)tw.onclick=()=>{viewW=weekStart(today());renderMain(false)}}
+  {const w=$("#tkw");let sx=null,sy=null;w.addEventListener("touchstart",e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+   w.addEventListener("touchend",e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){viewW=addDays(viewW,dx<0?7:-7);renderMain(false)}},{passive:true})}
   const a=$("#add"),a2=$("#add2");if(a)a.onclick=()=>addHabit();if(a2)a2.onclick=()=>addHabit();
   document.querySelectorAll(".tk td.d").forEach(el=>el.onclick=()=>{if(el.classList.contains("future")||el.classList.contains("off"))return;
+    if(el.dataset.k<addDays(today(),-1)){toast("this day is closed. the money's already gone.");return}
     const r=H.rows.find(x=>x.id===el.dataset.r),k=el.dataset.k,c=H.checks[r.id]||(H.checks[r.id]={});
     const wasPast=k<today();
-    if(c[k]){delete c[k];coin(el,"−"+money(wasPast?r.value*2:r.value),true);tickFx(r,k,false)}else{c[k]=1;coin(el,"+"+money(wasPast?r.value*2:r.value));tickFx(r,k,true)}
+    if(c[k]){const v=earnOn(r,k)+(wasPast?loseOn(r,k):0);delete c[k];coin(el,"−"+money(v),true);tickFx(r,k,false)}else{c[k]=1;coin(el,"+"+money(earnOn(r,k)+(wasPast?loseOn(r,k):0)));tickFx(r,k,true)}
     save();const sl=$("#tkw").scrollLeft;renderMain(false);$("#tkw").scrollLeft=sl});
   document.querySelectorAll(".tk td.nm[data-row]").forEach(el=>el.onclick=()=>editHabit(el.dataset.row));
   document.querySelectorAll(".tdy[data-t]").forEach(el=>el.onclick=()=>{const r=H.rows.find(x=>x.id===el.dataset.t),k=today(),c=H.checks[r.id]||(H.checks[r.id]={});
-    if(c[k]){delete c[k];coin(el.querySelector(".bx"),"−"+money(r.value),true);tickFx(r,k,false)}else{c[k]=1;coin(el.querySelector(".bx"),"+"+money(r.value));tickFx(r,k,true)}save();const sl=$("#tkw")?$("#tkw").scrollLeft:0;renderMain(false);if($("#tkw"))$("#tkw").scrollLeft=sl});
+    if(c[k]){const v=earnOn(r,k);delete c[k];coin(el.querySelector(".bx"),"−"+money(v),true);tickFx(r,k,false)}else{c[k]=1;coin(el.querySelector(".bx"),"+"+money(earnOn(r,k)));tickFx(r,k,true)}save();const sl=$("#tkw")?$("#tkw").scrollLeft:0;renderMain(false);if($("#tkw"))$("#tkw").scrollLeft=sl});
   const a0=$("#add0");if(a0)a0.onclick=()=>addHabit();
   const sn=$("#seen");if(sn)sn.onclick=()=>{H.seen=today();save();renderMain(false)};
+  const useSick=k=>{if(H.passes<1)return;H.sick[k]=1;H.passes--;save();toast("sick day used. rest, nothing is lost ✦");renderMain(false)};
+  {const a=$("#sickT");if(a)a.onclick=()=>useSick(today());const b=$("#sickY");if(b)b.onclick=()=>useSick(addDays(today(),-1))}
+  if(dbl(t)&&H.dblSeen!==t&&!isSick(t)){H.dblSeen=t;save(false);setTimeout(()=>toast("✦ double pay day: everything pays ×2 today"),700)}
   $("#stmt").onclick=openStatement;$("#lk").onclick=openLink;$("#ed").onclick=()=>{H.setup=false;render()};$("#rs").onclick=openReset;$("#hs").onclick=openInstall;bindInstall();
 }
 
@@ -733,7 +774,7 @@ async function openStatement(){
   x.font=F(600,150);x.fillStyle=end<0?"#e8322e":"#000";x.fillText(money(end),125,545);
   x.font=F(500,38);x.fillStyle=chg<0?"#e8322e":"#000";x.fillText((chg>=0?"+":"")+money(chg)+" this month",130,615);
   let yy=760;x.font=F(400,28);x.fillStyle="#707070";x.fillText("BY HABIT",90,yy);yy+=30;
-  H.rows.filter(r=>r.from<=m+"-"+pad(n)&&(!r.to||r.to>m+"-01")).slice(0,8).forEach(r=>{let e=0,dn=0;for(let d=1;d<=n;d++){const k=m+"-"+pad(d);if(!active(r,k)||k>t)continue;if(done(r,k)){e+=r.value;dn++}else if(k<t)e-=r.value}
+  H.rows.filter(r=>r.from<=m+"-"+pad(n)&&(!r.to||r.to>m+"-01")).slice(0,8).forEach(r=>{let e=0,dn=0;for(let d=1;d<=n;d++){const k=m+"-"+pad(d);if(!active(r,k)||k>t)continue;if(done(r,k)){e+=earnOn(r,k);dn++}else if(k<t)e-=loseOn(r,k)}
     yy+=70;x.strokeStyle="#e6e6e6";x.lineWidth=2;x.beginPath();x.moveTo(90,yy+22);x.lineTo(990,yy+22);x.stroke();
     x.font=F(400,40);x.fillStyle="#000";x.textAlign="left";x.fillText(r.name.toLowerCase().slice(0,26),90,yy);
     x.textAlign="right";x.fillStyle=e<0?"#e8322e":"#000";x.font=F(500,40);x.fillText((e>=0?"+":"")+money(e),990,yy);x.textAlign="left"});
