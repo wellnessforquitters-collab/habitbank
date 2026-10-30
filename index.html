@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="habit bank">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='white'/%3E%3Cg fill='none' stroke='black' stroke-width='4'%3E%3Crect x='4' y='4' width='56' height='56'/%3E%3Cpath d='M22.7 4V60M41.3 4V60M4 22.7H60M4 41.3H60'/%3E%3C/g%3E%3Crect x='24.7' y='24.7' width='14.6' height='14.6' fill='%23e8322e'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='black'/%3E%3Crect x='12' y='20' width='40' height='25.2' rx='3' fill='none' stroke='white' stroke-width='2.6'/%3E%3Crect x='16.5' y='33' width='16' height='3.2' rx='1' fill='white'/%3E%3Cpath d='M44 22.5l1.1 2.9 2.9 1.1-2.9 1.1-1.1 2.9-1.1-2.9-2.9-1.1 2.9-1.1z' fill='%23e8322e'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap">
 <style>
@@ -308,6 +308,55 @@ input.f:focus{border-bottom-color:var(--acc)}
 .mini{width:26px;height:17px;border-radius:3px;display:inline-block}
 .mini.black{background:#000}.mini.silver{background:linear-gradient(135deg,#eceef1,#b9bcc2 45%,#f4f5f7 60%,#a4a8ae)}
 .mini.gold{background:linear-gradient(135deg,#f6e3a8,#c99a3c 45%,#f9e8b3 60%,#a8792a)}.mini.metal{background:linear-gradient(135deg,#4a4c52,#1a1b1e 45%,#55585f 60%,#111214)}
+
+/* ===== landing clean pass ===== */
+.lwrap{gap:104px}
+.lhero{gap:26px}
+.lcard{box-shadow:0 14px 30px -20px rgba(0,0,0,.45)}
+.ltl{border-top:1px solid var(--fg)}
+.lsec{gap:22px}
+.lsec .kick{margin:0 0 -8px}
+.rule{border:1px solid var(--fg)}
+.rt{padding:30px 10px 22px}
+.rt+.rt{border-left:1px solid var(--fg)}
+.rt .bigbx{border-width:2px}
+.rt.hit .bigbx{border-color:#f3b9b6;background:#fdeceb}
+.lstart{justify-content:flex-start;gap:10px}
+.ltiers{justify-content:flex-start;margin-top:-10px}
+.lgrid i{border-color:#e4e4e4}
+.lgrid i.miss{border-color:#f6cfcc;background:#fdeceb}
+.lchart{border-left:1px solid var(--fg);border-bottom:1px solid var(--fg)}
+.rcpt{border:1px solid var(--fg);box-shadow:none;max-width:none;padding:22px 20px 20px}
+.rcpt .hd{border-bottom:1px solid var(--fg)}
+.rcpt .tot{border-top:1px solid var(--fg)}
+.lend{gap:18px}
+.lend .closing{font-size:58px;margin:0 0 4px}
+
+/* ===== install block, compact ===== */
+.inst{border:1px solid var(--fg);padding:16px 14px 14px;gap:14px}
+.inst .tag{font-size:11px;top:-8px}
+.inst .ih{gap:12px}
+.inst .ic{width:38px;height:38px;border-radius:9px;font-size:14px;box-shadow:none}
+.inst .it{font-size:14px;line-height:1.3}.inst .it small{font-size:12px;margin-top:1px}
+.iv{gap:4px;max-width:320px;margin:0 auto;width:100%}
+.ivs{gap:6px;font-size:11px}
+.ivt{max-width:74px;height:86px;border-width:1px;border-radius:10px;background:#fff}
+.arr{margin-top:34px;font-size:13px;color:var(--muted)}
+.ivt .bar{height:26px}
+.ivt .hl{width:20px;height:20px;box-shadow:0 0 0 1.5px var(--acc)}
+.ivt .hl svg{width:12px;height:12px}
+@keyframes pulse2{50%{box-shadow:0 0 0 1.5px var(--acc),0 0 0 4px rgba(232,50,46,.15)}}
+.ivt .menu{padding:5px 5px 6px;gap:4px}
+.ivt .menu i{height:5px}
+.ivt .menu .row{font-size:7px;padding:2px 3px;box-shadow:0 0 0 1px var(--acc)}
+.ivt .menu .row svg{width:9px;height:9px}
+.ivt .home{inset:10px 8px auto;gap:6px}
+.ivt .home i{background:#ededed}
+.ivt .home b{font-size:10px;border-radius:5px}
+.inst .note{font-size:11px}
+
+.inst{margin-top:16px;padding:22px 18px 18px;gap:18px}
+.iv{gap:6px}
 </style>
 </head>
 <body>
@@ -400,6 +449,7 @@ function renderLocked(){lclear();
     ${lcta()}
   </section>
   <section class="lsec" id="s1">
+    <p class="kick">✦ how it works</p>
     <div class="rule"><div class="rt" id="r1"><span class="bigbx">${TICK}</span><b>+$100</b><span>tick</span></div>
       <div class="rt miss" id="r2"><span class="bigbx"></span><b>−$100</b><span>skip</span></div></div>
     <div class="lstart">everyone starts with <b>$1,000</b></div>
@@ -413,7 +463,7 @@ function renderLocked(){lclear();
   </section>
   <section class="lsec" id="s3">
     <h1>every month,<br><em>a statement.</em></h1>
-    <div class="rcpt" id="rc"><div class="hd"><span>habit bank</span><span>october</span><b>✦</b></div>
+    <div class="rcpt" id="rc"><div class="hd"><span>october statement</span><b>✦</b></div>
       ${M.map(m=>`<div class="ln"><span>${m[0]}</span><span class="p${m[2]?" m":""}">${m[1]}</span></div>`).join("")}
       <div class="tot"><span>balance</span><b>$7,400</b></div></div>
   </section>
@@ -450,12 +500,13 @@ function growLoop(){if(!alive("lg"))return;
     $("#la").textContent=money(bal);$("#ld").textContent="day "+(d+1)},300+d*110);
   lat(growLoop,300+30*110+2600)}
 function rcptIn(){const ls=document.querySelectorAll("#rc .ln");ls.forEach((l,i)=>lat(()=>l.classList.add("in"),200+i*280));lat(()=>{const t=$("#rc .tot");if(t)t.classList.add("in")},200+ls.length*280+200)}
+const PRODUCT_IDS=[]; // TODO: lemon squeezy product ids that unlock habit bank — its own product + the bundle
 async function unlock(){const k=$("#key").value.trim();if(!k)return toast("paste your key first");
   const ok=()=>{H.unlocked=true;H.key=k;save();toast("unlocked ✦");if(LANDING())history.replaceState(null,"",location.pathname+location.search);render()};
   if(k.toUpperCase()===TEST_KEY)return ok();
   $("#unlock").textContent="checking…";
   try{const r=await fetch("https://api.lemonsqueezy.com/v1/licenses/activate",{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({license_key:k,instance_name:"habit-bank-"+Date.now()})});
-    const j=await r.json();if(j.activated||(j.license_key&&j.license_key.status==="active"))ok();else{toast("this key doesn't work");$("#unlock").textContent="unlock"}
+    const j=await r.json();const valid=j.activated||(j.license_key&&j.license_key.status==="active"),pid=j.meta&&j.meta.product_id;if(valid&&(!PRODUCT_IDS.length||PRODUCT_IDS.includes(pid)))ok();else{toast("this key doesn't work");$("#unlock").textContent="unlock"}
   }catch(e){toast("no connection, try again");$("#unlock").textContent="unlock"}}
 
 function renderSetup(){
@@ -468,7 +519,7 @@ function renderSetup(){
   <p class="muted" style="margin:0">everyone starts with $1,000. every habit pays you each day you do it. how rich can you get?</p>
   <button class="btn" id="go">add my habits</button>
   ${standalone()?"":`<div class="inst"><span class="tag">✦ make it an app</span>
-    <div class="ih"><span class="ic">✦</span><span class="it">put habit bank on your home screen<small>it opens like a real banking app. one tap, no browser.</small></span></div>
+    <div class="ih"><span class="ic">✦</span><span class="it">put habit bank on your home screen<small>opens like a real banking app</small></span></div>
     ${installVisual()}${MOBILE?"":'<p class="note">do this on your phone, in safari or chrome</p>'}</div>`}`;
   const seq=[[600,"d1","on",1100],[1300,"d2","on",1200],[2100,"d3","miss",1100]];
   const run=()=>{["d1","d2","d3"].forEach(id=>{const e=$("#"+id);if(e)e.className="drow"});const db=$("#db");if(db)db.textContent="$1,000";
@@ -557,7 +608,7 @@ function installVisual(){const a=ANDROID,label=a?"install app":"add to home scre
 function installSteps(){return installVisual()}
 function installCard(){if(standalone()||H.installDone||!H.rows.length||!(MOBILE||deferred))return"";
   return `<div class="inst"><span class="tag">✦ make it an app</span>
-  <div class="ih"><span class="ic">✦</span><span class="it">put habit bank on your home screen<small>it opens like a real banking app. one tap, no browser.</small></span></div>
+  <div class="ih"><span class="ic">✦</span><span class="it">put habit bank on your home screen<small>opens like a real banking app</small></span></div>
   ${installSteps()}
   <div class="ia">${deferred?'<button class="btn" id="inst">add to home screen</button>':""}<button class="link" id="instx">${IOS?"done":"later"}</button></div></div>`}
 function openInstall(){openSheet(`<h2>add to home screen</h2><div class="inst" style="border:0;padding:0">${standalone()?'<p style="margin:0">you\'re already using it as an app ✦</p>':`<div class="ih"><span class="ic">✦</span><span class="it">habit bank, one tap away<small>it opens like a real banking app.</small></span></div>${installSteps()}${deferred?'<button class="btn" id="inst2">add to home screen</button>':""}`}</div><button class="btn ghost" id="ix">close</button>`);
