@@ -262,6 +262,58 @@ td.gap,th.gap{width:8px}
 .pc .ct{flex:1}
 .oncel{font-size:10px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-top:4px}
 @media(max-width:760px){.pw .wc{min-height:0}.pw .wh{width:100%;justify-content:flex-start;gap:6px}}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.tabbar{display:none}
+.syncst{display:flex;align-items:center;gap:8px}.syncst i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.wshead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.wstrip{display:flex;gap:4px;margin:16px 0 4px}
+.wsd{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0 9px;border-radius:14px;font-size:11px;font-weight:600;color:var(--mut);position:relative;min-width:0}
+.wsd b{font-size:17px;color:var(--ink);font-weight:700}
+.wsd.sel{background:var(--ink);color:#BFB6A8}.wsd.sel b{color:#fff}
+.wsd.tdy:not(.sel){box-shadow:0 0 0 1.5px var(--ink) inset}
+.wsd i{width:5px;height:5px;border-radius:50%;background:#D886B6;position:absolute;bottom:3px}
+.dayh{display:flex;align-items:baseline;gap:8px;margin:18px 2px 10px}.dayh b{font-size:22px;font-weight:700;letter-spacing:-.5px}.dayh span{color:var(--mut);font-size:13px;font-weight:600}.dayh .cnt{margin-left:auto}
+.tl2{background:var(--panel);border-radius:18px;overflow:hidden}
+.trow2{display:flex;align-items:center;gap:12px;padding:13px 12px 13px 16px;border-top:1px solid var(--line);width:100%;text-align:left;position:relative}
+.trow2:first-child{border-top:none}
+.trow2 .bar{position:absolute;left:0;top:12px;bottom:12px;width:4px;border-radius:0 4px 4px 0}
+.tcb{width:24px;height:24px;border-radius:50%;border:2px solid var(--c);flex-shrink:0;position:relative;overflow:hidden;background:transparent;padding:0}
+.tcb::after{content:'';position:absolute;inset:0;background:var(--c);transform:scale(0);border-radius:50%;transition:transform .45s cubic-bezier(.3,1.4,.5,1)}
+.tcb.on::after{transform:scale(1)}
+.tx{flex:1;min-width:0}.tx b{display:block;font-size:15px;font-weight:600;line-height:1.3;overflow-wrap:anywhere}.tx>span{font-size:12px;color:var(--mut);display:block;margin-top:2px}
+.tx .tm{font-weight:700;color:var(--mut)}
+.trow2.done .tx b{text-decoration:line-through;color:var(--mut)}
+.tdel{width:30px;height:30px;border-radius:50%;color:#B9AE9C;font-size:19px;flex-shrink:0;line-height:1}
+.wkrow{background:var(--ink);color:#fff}.wkrow .tx>span{color:#B9AE9C}
+.wki{width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.wki svg{width:20px;height:20px}
+.wkgo{font-size:22px;color:#B9AE9C;padding:0 6px}
+.secl{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin:20px 4px 8px}
+.fab{position:fixed;right:18px;bottom:calc(86px + env(safe-area-inset-bottom));width:58px;height:58px;border-radius:50%;background:var(--ink);color:#fff;font-size:30px;font-weight:400;line-height:1;z-index:35;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(21,20,19,.25)}
+.nin{width:100%;padding:13px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel);outline:none;font-size:16px;margin-top:12px;color:var(--ink)}
+.nin:focus{border-color:var(--ink)}
+.lbl2{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin:18px 0 8px}
+.chipsrow{display:flex;flex-wrap:wrap;gap:6px}
+.seg3{display:flex;flex-direction:column;gap:6px}
+.seg3 button{text-align:left;padding:13px 14px;border-radius:14px;background:var(--panel);font-weight:600;font-size:14px;border:1.5px solid transparent}
+.seg3 button.sel{border-color:var(--ink);background:var(--soft)}
+@media(max-width:900px){.ttop>div:first-child{grid-column:1/-1;justify-content:center}}
+@media(max-width:760px){
+ .mtop,.side,.scrim{display:none!important}
+ .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(246,240,228,.96);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+ .tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--mut);text-decoration:none;padding:5px 0;min-width:0}
+ .tabbar a.cur{color:var(--ink)}
+ .tabbar a.cur svg{stroke-width:2.2}
+ .tabbar svg{width:23px;height:23px}
+ .main{padding-bottom:calc(100px + env(safe-area-inset-bottom))!important}
+ input,select,textarea{font-size:16px!important}
+ .catc{display:none}
+ .sub{font-size:13px}
+ .dtabs button{padding:8px 11px}
+ .ph .ptitle{font-size:22px}
+ .sheetc{padding:20px 18px calc(26px + env(safe-area-inset-bottom))}
+ .wf input{width:auto;flex:1;min-width:0}
+ .oneoff input#ot{min-width:100%}
+}
 @keyframes pop{50%{transform:scale(1.04)}}
 .pop{animation:pop .35s ease}
 @media(max-width:1180px){.dash{grid-template-columns:1fr}.right{display:grid;grid-template-columns:1fr 1fr;gap:24px}.right .wkl{margin-top:0}}
@@ -289,6 +341,7 @@ td.gap,th.gap{width:8px}
   <div id="view"></div>
  </main>
 </div>
+<nav class="tabbar" id="tabbar"></nav>
 <script>
 const SP={
  routines:{t:'Routines',c:'var(--y)',l:'var(--yl)',d:'var(--yd)',hex:'#F2D25C'},
@@ -340,7 +393,29 @@ if(!S||!S.tasks)S=defaults();
 if(!S.wdays){const old=S.workouts;const sample=!old||(old[0]&&old[0][0]&&old[0][0].n==='Hip thrust'&&old[3]&&old[3][0]&&old[3][0].n==='Lat pulldown');
  if(sample)S.wdays=defaultWdays();else{S.wdays={};for(let i=0;i<7;i++)S.wdays[i]={title:'',blocks:(old[i]||[]).map(e=>({id:e.id,type:'ex',n:e.n,sets:e.sets,reps:e.reps}))}}
  S.tasks=S.tasks.filter(t=>!(t.sp==='body'&&/^workout$/i.test(t.t)));delete S.workouts;try{localStorage.setItem('tracker-v2',JSON.stringify(S))}catch(e){}}
-const save=()=>{try{localStorage.setItem('tracker-v2',JSON.stringify(S))}catch(e){}};
+const localSave=()=>{try{localStorage.setItem('tracker-v2',JSON.stringify(S))}catch(e){}};
+const SB_URL_DEFAULT='',SB_KEY_DEFAULT='';
+let sbCfg={url:'',key:''};try{sbCfg=JSON.parse(localStorage.getItem('tracker-sb'))||sbCfg}catch(e){}
+if(!sbCfg.url&&SB_URL_DEFAULT)sbCfg={url:SB_URL_DEFAULT,key:SB_KEY_DEFAULT};
+let sb=null,sbUser=null,syncState=sbCfg.url?'loading':'off',lastSync=null,pushT=null,syncMsg='';
+const save=()=>{S.updatedAt=Date.now();localSave();schedulePush()};
+function normalize(){if(!S.wdays)S.wdays=defaultWdays();['checks','sets','moods'].forEach(k=>{if(!S[k])S[k]={}});if(!S.weights)S.weights=[];if(!S.tasks)S.tasks=[]}
+function loadSb(cb){if(window.supabase)return cb();const add=(src,fail)=>{const s=document.createElement('script');s.src=src;s.onload=()=>window.supabase?cb():fail();s.onerror=fail;document.head.appendChild(s)};add('supabase.js',()=>add('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',()=>{syncState='error';syncMsg='Could not load the sync library. Check your internet.';updSync()}))}
+function sbInit(){if(!sbCfg.url||!sbCfg.key)return;loadSb(()=>{try{if(!sb)sb=window.supabase.createClient(sbCfg.url,sbCfg.key,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'tracker-auth'}});
+ sb.auth.getSession().then(({data})=>{sbUser=data&&data.session?data.session.user:null;if(sbUser)pull(false);else{syncState='signedout';updSync()}}).catch(e=>{syncState='error';syncMsg=e.message||'Sync error';updSync()})}catch(e){syncState='error';syncMsg=e.message||'Sync error';updSync()}})}
+async function pull(first){if(!sb||!sbUser)return;syncState='syncing';updSync();
+ try{const {data,error}=await sb.from('tracker_state').select('data,updated_at').eq('user_id',sbUser.id).maybeSingle();if(error)throw error;
+  const rU=data&&data.data?(data.data.updatedAt||0):-1;
+  if(data&&data.data&&(first||rU>(S.updatedAt||0))){if(first){try{localStorage.setItem('tracker-v2-before-sync',JSON.stringify(S))}catch(e){}}S=data.data;normalize();localSave();lastSync=new Date();syncState='ok';syncMsg='';render();return}
+  if(!data||(S.updatedAt||0)>rU)await push();else{lastSync=new Date();syncState='ok';syncMsg='';updSync()}
+ }catch(e){syncState='error';syncMsg=e.message||String(e);updSync()}}
+async function push(){if(!sb||!sbUser)return;try{syncState='syncing';updSync();const {error}=await sb.from('tracker_state').upsert({user_id:sbUser.id,data:S,updated_at:new Date().toISOString()});if(error)throw error;lastSync=new Date();syncState='ok';syncMsg=''}catch(e){syncState='error';syncMsg=e.message||String(e)}updSync()}
+function schedulePush(){if(!sb||!sbUser)return;clearTimeout(pushT);pushT=setTimeout(push,1200)}
+function syncLabel(){return {off:'Saved on this device only',loading:'Connecting…',signedout:'Sync: not signed in',syncing:'Syncing…',ok:'Synced'+(lastSync?' '+pad(lastSync.getHours())+':'+pad(lastSync.getMinutes()):''),error:'Sync problem'}[syncState]}
+function syncColor(){return {off:'#B9AE9C',loading:'#F2D25C',signedout:'#F2D25C',syncing:'#F2D25C',ok:'#A6B56E',error:'#E07A5F'}[syncState]}
+function updSync(){if(typeof page!=='undefined'&&page==='save'&&!document.activeElement.closest('.sbf')){render();return}document.querySelectorAll('.syncst').forEach(e=>{e.innerHTML=`<i style="background:${syncColor()}"></i>${syncLabel()}`})}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')pull(false)});
+
 
 const sched=(t,d)=>t.days==='once'?iso(d)===t.date:(t.days==='all'||t.days.includes(dow(d)));
 const isWeekly=t=>Array.isArray(t.days);
@@ -357,6 +432,13 @@ function streak(sp,filter){let s=0;let d=new Date(TODAY);const st=dayStat(d,sp);
  for(let i=0;i<400;i++){const x=dayStat(d,sp);if(x.t===0){d=addD(d,-1);continue}if(x.n===x.t){s++;d=addD(d,-1)}else break}return s}
 const pct=f=>Math.round(f*100)+'%';
 
+function b64e(str){return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function b64d(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return decodeURIComponent(escape(atob(s)))}
+function myLink(){const o={v:Date.now(),name:S.name,tasks:S.tasks,wdays:S.wdays};return location.origin+location.pathname+'#setup='+b64e(JSON.stringify(o))}
+let justImported=false;
+function applySetup(str){let o;try{o=JSON.parse(b64d(str))}catch(e){return 'bad'}if(!o||!Array.isArray(o.tasks)||!o.wdays)return 'bad';if(o.v&&S.importedV&&o.v<=S.importedV)return 'old';
+ S.tasks=o.tasks;S.wdays=o.wdays;if(o.name)S.name=o.name;S.importedV=o.v||Date.now();normalize();save();return 'ok'}
+(function(){const h=location.hash;if(h.indexOf('#setup=')===0){if(applySetup(h.slice(7))==='ok')justImported=true}})();
 let page=['dash','plan','body','everyday','save'].includes(location.hash.slice(1))?location.hash.slice(1):'dash';
 let calM=new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
 let trM=new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
@@ -389,7 +471,7 @@ function side(){
  const L=(k,t)=>`<a href="#${k}" class="${page===k?'cur':''}">${IC[k]}${t}</a>`;
  return `<div class="logo">tracker<i></i></div><div class="lbl">General</div>${L('dash','Dashboard')}${L('plan','Weekly plan')}${L('body','Body')}${L('everyday','Everyday tracker')}${L('save','Save my tracker')}
  <div class="lbl" style="margin-top:22px">Spheres</div>${SPK.map(k=>`<a href="#plan"><span class="dot" style="background:${SP[k].hex}"></span>${SP[k].t}</a>`).join('')}
- <div class="foot">Saved in this browser</div>`}
+ <div class="foot"><a href="#save" class="syncst" style="padding:0;color:#8C8273;font-size:12px"><i style="background:${syncColor()}"></i>${syncLabel()}</a></div>`}
 
 function weekBars(sp){
  return `<div class="bars">${DN.map((n,i)=>{const d=addD(MON,i);const fut=d>TODAY;const s=dayStat(d,sp);
@@ -424,7 +506,7 @@ function vDash(){
  const mh=[];for(let i=13;i>=0;i--){const d=iso(addD(TODAY,-i));const m=S.moods[d];mh.push(`<span title="${d}" style="${m!=null?`background:${MOODS[m][1]}`:''}"></span>`)}
  const SD=selDay,isT=iso(SD)===TI,sds=dayStat(SD);
  const todays=tasksOn(SD).sort((a,b)=>isDone(SD,a.id)-isDone(SD,b.id)||((a.time||'99')<(b.time||'99')?-1:(a.time||'99')>(b.time||'99')?1:0)||ALLSP.indexOf(a.sp)-ALLSP.indexOf(b.sp));
- const ban=(!STANDALONE&&window.innerWidth<760)?'<div class="banner">Add the tracker to your home screen so everything stays saved<a href="#save">How</a></div>':'';
+ const ban=justImported&&!STANDALONE?'<div class="banner" style="background:var(--g);color:var(--gd)">Your plan is here. Now tap Share, then Add to Home Screen, before tapping anything else.</div>':(!STANDALONE&&window.innerWidth<760)?'<div class="banner">Add the tracker to your home screen so everything stays saved<a href="#save">How</a></div>':'';
  return `<h1>${greet()}, ${esc(S.name)}</h1><p class="sub">${sub}</p>${ban}
  <div class="dash"><div>
  <div class="row2" style="margin-top:0"><h3>This week</h3><span style="font-size:12px;font-weight:600">${pct(wk.f)} done</span></div>
@@ -486,7 +568,36 @@ function vWeekList(){
 
 let planWk=new Date(MON),addSp='routines',addMode='weekly';
 function chipX(act,attrs){return `<button data-act="${act}" ${attrs} aria-label="Remove">×</button>`}
+const DLONG=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const isMob=()=>window.innerWidth<760;
+let planDay=dow(TODAY),draft={t:'',time:''},addRep='weekly';
+function vPlanM(){
+ const days=DN.map((n,i)=>addD(planWk,i)),sel=days[planDay],ds=iso(sel);
+ const rng=`${MN[planWk.getMonth()].slice(0,3)} ${planWk.getDate()} – ${days[6].getDate()}${days[6].getMonth()!==planWk.getMonth()?' '+MN[days[6].getMonth()].slice(0,3):''}`;
+ const strip=days.map((d,i)=>{const hasOnce=S.tasks.some(t=>t.days==='once'&&t.date===iso(d));return `<button class="wsd${i===planDay?' sel':''}${iso(d)===TI?' tdy':''}" data-act="pday" data-i="${i}">${DN[i].slice(0,2)}<b>${d.getDate()}</b>${hasOnce?'<i></i>':''}</button>`}).join('');
+ const row=(t,meta,del)=>{const sp=SP[t.sp],on=isDone(sel,t.id);return `<div class="trow2${on?' done':''}"><span class="bar" style="background:${sp.hex}"></span><button class="tcb${on?' on':''}" data-act="tg" data-id="${t.id}" data-d="${ds}" style="--c:${sp.hex}" aria-label="Done"></button><div class="tx"><b>${t.time?`<span class="tm">${t.time}</span> `:''}${esc(t.t)}</b><span>${meta}</span></div>${del}</div>`};
+ const x=(act,attrs)=>`<button class="tdel" data-act="${act}" ${attrs} aria-label="Remove">×</button>`;
+ const once=S.tasks.filter(t=>t.days==='once'&&t.date===ds).sort((a,b)=>(a.time||'99')<(b.time||'99')?-1:1);
+ const weekly=S.tasks.filter(t=>isWeekly(t)&&t.days.includes(planDay)).sort((a,b)=>ALLSP.indexOf(a.sp)-ALLSP.indexOf(b.sp));
+ const every=S.tasks.filter(t=>t.days==='all').sort((a,b)=>ALLSP.indexOf(a.sp)-ALLSP.indexOf(b.sp));
+ let wk='';if(hasPlan(planDay)){const st=wkStat(planDay,ds),on=isDone(sel,'wk-'+planDay);wk=`<button class="trow2 wkrow" data-act="openwk" data-i="${planDay}" data-d="${ds}"><span class="wki">${DUMB}</span><div class="tx"><b>${esc(S.wdays[planDay].title||'Workout')}</b><span>${wkSummary(planDay)}${st.t?` · ${on?st.t:st.n}/${st.t}`:''}</span></div><span class="wkgo">›</span></button>`}
+ const sched=[...once.map(t=>row(t,`${SP[t.sp].t} · only this date`,x('deltask',`data-id="${t.id}"`))),...weekly.map(t=>row(t,`${SP[t.sp].t} · every ${DLONG[planDay]}`,x('unday',`data-id="${t.id}" data-i="${planDay}"`)))].join('');
+ const st=dayStat(sel);
+ return `<div class="wshead"><h1>Plan</h1><div class="mnav"><button class="ib" data-act="pwp" aria-label="Previous week"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button><button class="pill light" data-act="pwnow">${rng}</button><button class="ib" data-act="pwn" aria-label="Next week"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
+ <div class="wstrip">${strip}</div>
+ <div class="dayh"><b>${iso(sel)===TI?'Today':DLONG[planDay]}</b><span>${sel.getDate()} ${MN[sel.getMonth()].slice(0,3)}</span><span class="cnt">${st.n}/${st.t}</span></div>
+ ${wk||sched?`<div class="tl2">${wk}${sched}</div>`:''}
+ ${every.length?`<div class="secl">Every day</div><div class="tl2">${every.map(t=>row(t,SP[t.sp].t+' · every day',x('deltask',`data-id="${t.id}"`))).join('')}</div>`:''}
+ ${!wk&&!sched&&!every.length?'<div class="empty">Nothing planned. Tap + to add a task.</div>':''}
+ <div style="height:70px"></div><button class="fab" data-act="newtask" aria-label="Add task">+</button>`}
+function newTaskHtml(){const d=fromIso(sheet.ds),i=dow(d);
+ return `<div class="ptitle">New task</div><input class="nin" id="nt" placeholder="What needs doing?" value="${esc(draft.t)}" autocomplete="off">
+ <div class="lbl2">Sphere</div><div class="chipsrow">${ALLSP.map(k=>`<button class="spp${addSp===k?' sel':''}" data-act="addsp" data-k="${k}" style="--c:${SP[k].hex};--l:${SP[k].l};--d:${SP[k].d}"><i></i>${SP[k].t}</button>`).join('')}</div>
+ <div class="lbl2">Repeat</div><div class="seg3">${[['weekly','Every '+DLONG[i]],['once','Only on '+DLONG[i]+', '+d.getDate()+' '+MN[d.getMonth()].slice(0,3)],['all','Every day']].map(([r,l])=>`<button class="${addRep===r?'sel':''}" data-act="addrep" data-r="${r}">${l}</button>`).join('')}</div>
+ ${addRep==='once'?`<div class="lbl2">Time, optional</div><input class="nin" id="ntime" type="time" value="${draft.time}" style="margin-top:0">`:''}
+ <button class="pill blk" data-act="addsubmit" style="padding:15px;font-size:15px;margin-top:18px">Add task</button><div class="msg" id="nmsg"></div>`}
 function vPlan(){
+ if(isMob())return vPlanM();
  const wkEnd=addD(planWk,6);
  const lbl=planWk.getMonth()===wkEnd.getMonth()?`${planWk.getDate()}–${wkEnd.getDate()} ${MN[wkEnd.getMonth()].slice(0,3)}`:`${planWk.getDate()} ${MN[planWk.getMonth()].slice(0,3)} – ${wkEnd.getDate()} ${MN[wkEnd.getMonth()].slice(0,3)}`;
  const ch=(t,x)=>`<span class="chip pc" style="background:${SP[t.sp].l};color:${SP[t.sp].d}"><i class="pd" style="background:${SP[t.sp].hex}"></i><span class="ct">${t.time?`<b>${t.time}</b> `:''}${esc(t.t)}</span>${x}</span>`;
@@ -547,7 +658,7 @@ function planHtml(i,ds){const w=S.wdays[i],st=wkStat(i,ds),dt=fromIso(ds),on=!!S
 function drawSheet(){let el=document.getElementById('sheet');if(!sheet){if(el)el.remove();return}
  if(!el){el=document.createElement('div');el.id='sheet';el.className='sheetwrap';el.addEventListener('click',e=>{if(e.target===el){sheet=null;wkEdit=false;addType=null;render()}});document.body.appendChild(el)}
  const sc=el.querySelector('.sheetc');const top=sc?sc.scrollTop:0;
- el.innerHTML=`<div class="sheetc"><button class="del" data-act="closewk" aria-label="Close" style="float:right;width:32px;height:32px;font-size:20px;margin:-6px -6px 0 0">×</button>${planHtml(sheet.i,sheet.ds)}</div>`;
+ el.innerHTML=`<div class="sheetc"><button class="del" data-act="closewk" aria-label="Close" style="float:right;width:32px;height:32px;font-size:20px;margin:-6px -6px 0 0">×</button>${sheet.type==='add'?newTaskHtml():planHtml(sheet.i,sheet.ds)}</div>`;
  el.querySelector('.sheetc').scrollTop=top}
 function donut(f,size,lbl,inner){const r=size/2-7,C=2*Math.PI*r;
  return `<div class="donut"><svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#EFE7D8" stroke-width="9"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#151413" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C*f} ${C}" transform="rotate(-90 ${size/2} ${size/2})" style="transition:stroke-dasharray .6s"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="${size>90?17:14}" font-weight="700" fill="#151413">${inner||pct(f)}</text></svg><span>${lbl}</span></div>`}
@@ -572,14 +683,14 @@ function vEveryday(){
  const head1=weeks.map((w,i)=>`${i?'<th class="gap"></th>':''}<th class="wk" colspan="${w.length}">Week ${i+1}</th>`).join('');
  const head2=weeks.map((w,i)=>(i?'<th class="gap"></th>':'')+w.map(d=>`<th class="${iso(d)===TI?'tdy':''}">${DN[dow(d)][0]}<br>${d.getDate()}</th>`).join('')).join('');
  const rows=hs.map(h=>{const sp=SP[h.sp];const c=cnt(h,past);const f=past.length?c/past.length:0;
-  return `<tr><td class="nm"><button class="del" data-act="deltask" data-id="${h.id}" aria-label="Remove" style="width:20px;height:20px;font-size:13px">×</button> ${esc(h.t)}</td><td class="cat"><span style="background:${sp.l};color:${sp.d}">${sp.t}</span></td>
+  return `<tr><td class="nm"><button class="del" data-act="deltask" data-id="${h.id}" aria-label="Remove" style="width:20px;height:20px;font-size:13px">×</button> ${esc(h.t)}</td><td class="cat catc"><span style="background:${sp.l};color:${sp.d}">${sp.t}</span></td>
   ${weeks.map((w,i)=>(i?'<td class="gap"></td>':'')+w.map(d=>{const fut=d>TODAY,on=isDone(d,h.id);return `<td><span class="cb${on?' on':''}${fut?' fut':''}" ${fut?'':`data-act="tg" data-id="${h.id}" data-d="${iso(d)}"`} style="${on?`border-color:${sp.hex}`:''}"><i style="background:${sp.hex}"></i>${CHK}</span></td>`}).join('')).join('')}
   <td class="pg"><div><span class="tr"><i style="width:${f*100}%;background:${sp.hex}"></i></span>${c}/${past.length}</div></td></tr>`}).join('');
  return `<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap"><div><h1>Everyday tracker</h1><p class="sub">Your every-day actions, month by month.</p></div>
  <div class="mnav"><button class="ib" data-act="trp" aria-label="Previous month"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><span class="pill">${MN[m]} ${y}</span><button class="ib" data-act="trn" aria-label="Next month"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>
  <div class="panel" style="margin-top:20px"><div class="ttop" style="margin-top:0"><div style="display:flex;align-items:center;gap:14px">${donut(tot?dn/tot:0,104,'Month')}<div style="font-size:12px;color:var(--mut);font-weight:600;line-height:1.5"><b style="font-size:20px;color:var(--ink);display:block">${dn}</b>completed<b style="font-size:20px;color:var(--ink);display:block;margin-top:6px">${tot}</b>goal so far</div></div>${wd.join('')}</div></div>
  <div class="tchart"><div class="panel"><h3 style="margin-bottom:10px">Daily completion</h3>${area}</div><div class="panel"><h3 style="margin-bottom:6px">By sphere</h3>${bySp}</div></div>
- <div class="sheet"><table><tr><th></th><th></th>${head1}<th class="wk pg" style="text-align:center">Progress</th></tr><tr><th style="text-align:left">Action</th><th>Sphere</th>${head2}<th></th></tr>${rows}</table>
+ <div class="sheet"><table><tr><th></th><th class="catc"></th>${head1}<th class="wk pg" style="text-align:center">Progress</th></tr><tr><th style="text-align:left">Action</th><th class="catc">Sphere</th>${head2}<th></th></tr>${rows}</table>
  ${hs.length?'':'<div class="empty">Add your first every-day action below</div>'}
  <form class="addh" id="hform"><input id="hn" placeholder="New every-day action" style="flex:1;min-width:180px"><select id="hs">${SPK.map(k=>`<option value="${k}">${SP[k].t}</option>`).join('')}</select><button class="pill" type="submit">Add</button></form></div>
  <div class="cons">
@@ -594,10 +705,21 @@ const IOS=/iPhone|iPad|iPod/.test(navigator.userAgent);
 let PERSIST=null;
 try{if(navigator.storage&&navigator.storage.persist){navigator.storage.persist().then(p=>{PERSIST=p;if(page==='save')render()})}}catch(e){}
 function storageOk(){try{localStorage.setItem('__t','1');localStorage.removeItem('__t');return true}catch(e){return false}}
+function vSync(){
+ const f=(id,ph,type,val)=>`<input class="nin sbf" id="${id}" placeholder="${ph}" type="${type||'text'}" value="${val||''}" autocomplete="off" autocapitalize="off" spellcheck="false">`;
+ let body='';
+ if(!sbCfg.url)body=`<p class="sub" style="margin-top:6px">Connect a free Supabase project once, then sign in on your computer and your phone. Everything you add on one shows up on the other.</p>${f('sburl','Project URL, https://xxxx.supabase.co')}${f('sbkey','anon public key')}<div class="btns"><button class="pill" data-act="sbcfg">Connect</button></div>`;
+ else if(!sbUser)body=`<p class="sub" style="margin-top:6px">Sign in with the same email and password on every device.</p>${f('sbem','Email','email')}${f('sbpw','Password','password')}<div class="btns"><button class="pill" data-act="sbin">Sign in</button><button class="pill light" data-act="sbup">Create account</button><button class="pill light" data-act="sbreset">Change project</button></div>`;
+ else body=`<div class="stat"><i style="background:${syncColor()}"></i>${syncLabel()} · ${esc(sbUser.email||'')}</div><div class="btns"><button class="pill" data-act="sbnow">Sync now</button><button class="pill light" data-act="sbout">Sign out</button></div>`;
+ return `<details class="panel" style="margin-top:14px"${sbCfg.url?' open':''}><summary style="cursor:pointer;font-weight:600">Live sync (optional, needs a free Supabase account)</summary>${body}<div class="msg" style="color:${syncState==='error'?'#B3412A':'var(--mut)'}">${esc(syncMsg)}</div></details>`}
 function vSave(){
  const ok=storageOk(),lb=S.lastBackup;
  const st=(c,t)=>`<div class="stat"><i style="background:${c}"></i>${t}</div>`;
- return `<h1>Save my tracker</h1><p class="sub">Everything you tick is saved automatically on this device. Here you can install the tracker on your phone and keep a backup.</p>
+ return `<h1>Save my tracker</h1><p class="sub">Move your plan to your phone with one link and keep a backup.</p>
+ <div class="panel" style="margin-top:22px;background:var(--ink);color:#F6F0E4"><h3 style="color:#fff">My link</h3>
+ <p style="font-size:13px;line-height:1.55;margin-top:8px;color:#CFC6B6">This link carries your whole plan: tasks, days and workouts. Copy it, open it on your phone in Safari and add it to your Home Screen. Done.</p>
+ <div class="btns"><button class="pill" data-act="copylink" style="background:#F6F0E4;color:var(--ink)">Copy my link</button></div><div class="msg" id="lmsg" style="color:#EBB3D6"></div>
+ <details style="margin-top:10px"><summary style="font-size:12px;color:#8C8273;cursor:pointer">Changed your plan later? Paste the new link here</summary><textarea class="bk" id="linkin" placeholder="Paste your link" style="border-color:#3A3633;color:#F6F0E4"></textarea><div class="btns"><button class="pill" data-act="uselink" style="background:#F6F0E4;color:var(--ink)">Load this plan</button></div></details></div>
  <div class="panel" style="margin-top:22px"><h3>Status</h3>
  ${st(ok?'#A6B56E':'#E07A5F',ok?'Saving works on this device':'This browser is blocking storage, your ticks won\'t be kept')}
  ${st(STANDALONE?'#A6B56E':'#F2D25C',STANDALONE?'Opened as an app from your home screen':'Opened in the browser, not from the home screen icon')}
@@ -609,17 +731,19 @@ function vSave(){
  <div class="panel" style="margin-top:14px"><h3>Backup</h3><p class="sub" style="margin-top:6px">Copy your backup once a week and keep it in Notes. If you change phones or the data ever gets cleared, paste it below and press Restore.</p>
  <div class="btns"><button class="pill" data-act="bkcopy">Copy backup</button><button class="pill light" data-act="bkfile">Download file</button></div>
  <textarea class="bk" id="bkin" placeholder="Paste a backup here to restore"></textarea>
- <div class="btns"><button class="pill light" data-act="bkrestore">Restore</button></div><div class="msg" id="bkmsg"></div></div>`}
+ <div class="btns"><button class="pill light" data-act="bkrestore">Restore</button></div><div class="msg" id="bkmsg"></div></div>${vSync()}`}
 function bkText(){const c=Object.assign({},S);return JSON.stringify(c)}
 function bkMark(){S.lastBackup=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});save()}
 function bkMsg(t,err){const m=document.getElementById('bkmsg');if(m){m.textContent=t;m.style.color=err?'#B3412A':'var(--gd)'}}
 let restoreArmed=false;
 function render(popSel){
  document.getElementById('side').innerHTML=side();
+ document.getElementById('tabbar').innerHTML=[['dash','Today'],['plan','Plan'],['body','Body'],['everyday','Tracker'],['save','Save']].map(([k,l])=>`<a href="#${k}" class="${page===k?'cur':''}">${IC[k]}${l}</a>`).join('');
  document.getElementById('mtitle').textContent={dash:'Dashboard',plan:'Weekly plan',body:'Body',everyday:'Everyday tracker',save:'Save my tracker'}[page];
  document.getElementById('view').innerHTML={dash:vDash,plan:vPlan,body:vBody,everyday:vEveryday,save:vSave}[page]();
  const sd=document.getElementById('sdraw');if(sd){sd.getBoundingClientRect();requestAnimationFrame(()=>requestAnimationFrame(()=>sd.style.strokeDashoffset=sd.dataset.to))}
  drawSheet();
+ if(page==='everyday'){const sh=document.querySelector('.sheet'),td=sh&&sh.querySelector('th.tdy');if(sh&&td&&sh.scrollWidth>sh.clientWidth)sh.scrollLeft=Math.max(0,td.offsetLeft-sh.clientWidth/2)}
  if(popSel){const el=document.querySelector(popSel);if(el)el.classList.add('pop')}
  const wf=document.getElementById('wform');if(wf)wf.onsubmit=e=>{e.preventDefault();const kg=parseFloat(String(document.getElementById('wkg').value).replace(',','.'));const d=document.getElementById('wd').value;if(!kg||!d)return;S.weights=S.weights.filter(x=>x.d!==d);S.weights.push({d,kg:Math.round(kg*10)/10});save();render()};
  const of=document.getElementById('oform');if(of)of.onsubmit=e=>{e.preventDefault();const t=document.getElementById('ot').value.trim();if(!t)return;S.tasks.push({id:uid(),t,sp:document.getElementById('osp').value,days:'once',date:iso(selDay),time:document.getElementById('otime').value||''});save();render()};
@@ -650,7 +774,23 @@ document.addEventListener('click',e=>{
  if(act==='addmode'){addMode=a.dataset.m;render();return}
  if(act==='pwp'){planWk=addD(planWk,-7);render();return}
  if(act==='pwn'){planWk=addD(planWk,7);render();return}
- if(act==='pwnow'){planWk=new Date(MON);render();return}
+ if(act==='pwnow'){planWk=new Date(MON);planDay=dow(TODAY);render();return}
+ if(act==='pday'){planDay=+a.dataset.i;render();return}
+ if(act==='newtask'){const d=addD(planWk,planDay);sheet={type:'add',ds:iso(d),i:planDay};draft={t:'',time:''};drawSheet();setTimeout(()=>{const n=document.getElementById('nt');if(n)n.focus()},60);return}
+ if(act==='addrep'){addRep=a.dataset.r;drawSheet();return}
+ if(act==='addsubmit'){const n=document.getElementById('nt');if(n)draft.t=n.value;const t=draft.t.trim();if(!t){const m=document.getElementById('nmsg');if(m){m.textContent='Write the task first.';m.style.color='#B3412A'}if(n)n.focus();return}
+  const i=sheet.i,ds=sheet.ds;if(addRep==='all')S.tasks.push(T(t,addSp,'all'));else if(addRep==='once')S.tasks.push({id:uid(),t,sp:addSp,days:'once',date:ds,time:draft.time||''});else{const ex=S.tasks.find(x=>isWeekly(x)&&x.sp===addSp&&x.t.toLowerCase()===t.toLowerCase());if(ex){if(!ex.days.includes(i)){ex.days.push(i);ex.days.sort()}}else S.tasks.push(T(t,addSp,[i]))}
+  save();buzz();sheet=null;draft={t:'',time:''};render();return}
+ if(act==='sbcfg'){const u=(document.getElementById('sburl').value||'').trim().replace(/\/+$/,''),k=(document.getElementById('sbkey').value||'').trim();if(!/^https:\/\/.+/.test(u)||k.length<20){syncMsg='Paste both the Project URL (starts with https://) and the anon public key.';syncState='error';render();return}sbCfg={url:u,key:k};try{localStorage.setItem('tracker-sb',JSON.stringify(sbCfg))}catch(e){}sb=null;syncState='loading';syncMsg='';render();sbInit();return}
+ if(act==='sbin'||act==='sbup'){const em=(document.getElementById('sbem').value||'').trim(),pw=document.getElementById('sbpw').value||'';if(!em||pw.length<6){syncMsg='Enter your email and a password of at least 6 characters.';syncState='signedout';render();return}if(!sb){sbInit();syncMsg='Still connecting, try again in a second.';render();return}
+  syncMsg=act==='sbin'?'Signing in…':'Creating account…';render();
+  (act==='sbin'?sb.auth.signInWithPassword({email:em,password:pw}):sb.auth.signUp({email:em,password:pw})).then(({data,error})=>{if(error){syncState='signedout';syncMsg=error.message;render();return}
+   if(data&&data.session){sbUser=data.session.user;syncMsg='';pull(true)}else{syncState='signedout';syncMsg='Account created. If Supabase asks you to confirm your email, confirm it, then press Sign in.';render()}}).catch(e=>{syncState='signedout';syncMsg=e.message||'Sign-in failed';render()});return}
+ if(act==='sbout'){if(sb)sb.auth.signOut();sbUser=null;syncState='signedout';render();return}
+ if(act==='sbnow'){pull(false);return}
+ if(act==='sbreset'){sbCfg={url:'',key:''};try{localStorage.removeItem('tracker-sb')}catch(e){}sb=null;sbUser=null;syncState='off';syncMsg='';render();return}
+ if(act==='copylink'){const l=myLink();const m=document.getElementById('lmsg');const ok=()=>{if(m)m.textContent='Link copied. Send it to your phone (Notes, Telegram, AirDrop) and open it in Safari.'};const fail=()=>{const b=document.getElementById('linkin');const d=b&&b.closest('details');if(d)d.open=true;if(b){b.value=l;b.select()}if(m)m.textContent='Copy the link from the box below.'};try{navigator.clipboard.writeText(l).then(ok,fail)}catch(e){fail()}return}
+ if(act==='uselink'){const v=(document.getElementById('linkin').value||'').trim();const i=v.indexOf('#setup=');const m=document.getElementById('lmsg');const r=i<0?'bad':applySetup(v.slice(i+7));if(r==='ok'){render();const m2=document.getElementById('lmsg');if(m2)m2.textContent='Plan loaded.'}else if(m)m.textContent=r==='old'?'You already have this plan or a newer one.':'That doesn\'t look like your tracker link.';return}
  if(act==='menu'){document.getElementById('root').classList.toggle('open');return}
  if(act==='tg'){const k=a.dataset.d+'|'+a.dataset.id;if(S.checks[k])delete S.checks[k];else{S.checks[k]=1;buzz()}save();
   const on=!!S.checks[k];a.classList.toggle('on',on);if(a.classList.contains('cb'))a.style.borderColor=on?SP[S.tasks.find(t=>t.id===a.dataset.id).sp].hex:'';
@@ -670,9 +810,12 @@ document.addEventListener('keydown',e=>{
  const d=i.dataset.d,dt=i.dataset.date;if(addFromInput(i)){render();const n=document.querySelector(`[data-add][data-d="${d}"]`);if(n)n.focus()}
 });
 document.addEventListener('focusout',e=>{const i=e.target.closest&&e.target.closest('[data-add]');if(!i||!i.value.trim())return;if(addFromInput(i))setTimeout(render,0)});
+document.addEventListener('input',e=>{if(e.target.id==='nt')draft.t=e.target.value;if(e.target.id==='ntime')draft.time=e.target.value});
+let lastMob=isMob();window.addEventListener('resize',()=>{if(isMob()!==lastMob){lastMob=isMob();render()}});
 document.addEventListener('change',e=>{const t=e.target.closest&&e.target.closest('[data-wtitle]');if(!t)return;S.wdays[+t.dataset.wtitle].title=t.value.trim();save();render()});
-window.addEventListener('hashchange',()=>{sheet=null;planWk=new Date(MON);wkEdit=false;addType=null;const h=location.hash.slice(1);if(['dash','plan','body','everyday','save'].includes(h)){page=h;document.getElementById('root').classList.remove('open');window.scrollTo(0,0);render()}});
+window.addEventListener('hashchange',()=>{sheet=null;planWk=new Date(MON);planDay=dow(TODAY);wkEdit=false;addType=null;const h=location.hash.slice(1);if(['dash','plan','body','everyday','save'].includes(h)){page=h;document.getElementById('root').classList.remove('open');window.scrollTo(0,0);render()}});
 render();
+sbInit();
 </script>
 </body>
 </html>
