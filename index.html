@@ -378,7 +378,7 @@ function defaultWdays(){return{
  6:{title:'',blocks:[]}
 }}
 function defaults(){return{
- name:'Polina',
+ name:'',
  tasks:[
   T('Morning warm-up','routines','all'),T('No phone hour before bed','routines','all'),T('Evening routine','routines','all'),
   T('Everything shower','routines',[6]),T('Room reset','routines',[2,5]),T('Plan the week','routines',[6]),
@@ -394,7 +394,7 @@ if(!S.wdays){const old=S.workouts;const sample=!old||(old[0]&&old[0][0]&&old[0][
  if(sample)S.wdays=defaultWdays();else{S.wdays={};for(let i=0;i<7;i++)S.wdays[i]={title:'',blocks:(old[i]||[]).map(e=>({id:e.id,type:'ex',n:e.n,sets:e.sets,reps:e.reps}))}}
  S.tasks=S.tasks.filter(t=>!(t.sp==='body'&&/^workout$/i.test(t.t)));delete S.workouts;try{localStorage.setItem('tracker-v2',JSON.stringify(S))}catch(e){}}
 const localSave=()=>{try{localStorage.setItem('tracker-v2',JSON.stringify(S))}catch(e){}};
-const SB_URL_DEFAULT='',SB_KEY_DEFAULT='';
+const SB_URL_DEFAULT='https://asabszixbbhfliyghezg.supabase.co',SB_KEY_DEFAULT='sb_publishable_b9BfgqKQduuT1y_3oG22qw_jNNONZHZ';
 let sbCfg={url:'',key:''};try{sbCfg=JSON.parse(localStorage.getItem('tracker-sb'))||sbCfg}catch(e){}
 if(!sbCfg.url&&SB_URL_DEFAULT)sbCfg={url:SB_URL_DEFAULT,key:SB_KEY_DEFAULT};
 let sb=null,sbUser=null,syncState=sbCfg.url?'loading':'off',lastSync=null,pushT=null,syncMsg='';
@@ -506,8 +506,8 @@ function vDash(){
  const mh=[];for(let i=13;i>=0;i--){const d=iso(addD(TODAY,-i));const m=S.moods[d];mh.push(`<span title="${d}" style="${m!=null?`background:${MOODS[m][1]}`:''}"></span>`)}
  const SD=selDay,isT=iso(SD)===TI,sds=dayStat(SD);
  const todays=tasksOn(SD).sort((a,b)=>isDone(SD,a.id)-isDone(SD,b.id)||((a.time||'99')<(b.time||'99')?-1:(a.time||'99')>(b.time||'99')?1:0)||ALLSP.indexOf(a.sp)-ALLSP.indexOf(b.sp));
- const ban=justImported&&!STANDALONE?'<div class="banner" style="background:var(--g);color:var(--gd)">Your plan is here. Now tap Share, then Add to Home Screen, before tapping anything else.</div>':(!STANDALONE&&window.innerWidth<760)?'<div class="banner">Add the tracker to your home screen so everything stays saved<a href="#save">How</a></div>':'';
- return `<h1>${greet()}, ${esc(S.name)}</h1><p class="sub">${sub}</p>${ban}
+ const ban=syncState==='signedout'?'<div class="banner">Sign in once to sync your phone and computer<a href="#save">Sign in</a></div>':justImported&&!STANDALONE?'<div class="banner" style="background:var(--g);color:var(--gd)">Your plan is here. Now tap Share, then Add to Home Screen, before tapping anything else.</div>':(!STANDALONE&&window.innerWidth<760)?'<div class="banner">Add the tracker to your home screen so everything stays saved<a href="#save">How</a></div>':'';
+ return `<h1>${greet()}${S.name?', '+esc(S.name):''}</h1><p class="sub">${sub}</p>${ban}
  <div class="dash"><div>
  <div class="row2" style="margin-top:0"><h3>This week</h3><span style="font-size:12px;font-weight:600">${pct(wk.f)} done</span></div>
  <div class="cards">
@@ -709,14 +709,14 @@ function vSync(){
  const f=(id,ph,type,val)=>`<input class="nin sbf" id="${id}" placeholder="${ph}" type="${type||'text'}" value="${val||''}" autocomplete="off" autocapitalize="off" spellcheck="false">`;
  let body='';
  if(!sbCfg.url)body=`<p class="sub" style="margin-top:6px">Connect a free Supabase project once, then sign in on your computer and your phone. Everything you add on one shows up on the other.</p>${f('sburl','Project URL, https://xxxx.supabase.co')}${f('sbkey','anon public key')}<div class="btns"><button class="pill" data-act="sbcfg">Connect</button></div>`;
- else if(!sbUser)body=`<p class="sub" style="margin-top:6px">Sign in with the same email and password on every device.</p>${f('sbem','Email','email')}${f('sbpw','Password','password')}<div class="btns"><button class="pill" data-act="sbin">Sign in</button><button class="pill light" data-act="sbup">Create account</button><button class="pill light" data-act="sbreset">Change project</button></div>`;
+ else if(!sbUser)body=`<p class="sub" style="margin-top:6px">Sign in with the same email and password on every device.</p>${f('sbem','Email','email')}${f('sbpw','Password','password')}<div class="btns"><button class="pill" data-act="sbin">Sign in</button><button class="pill light" data-act="sbup">Create account</button>${SB_URL_DEFAULT?'':'<button class="pill light" data-act="sbreset">Change project</button>'}</div>`;
  else body=`<div class="stat"><i style="background:${syncColor()}"></i>${syncLabel()} · ${esc(sbUser.email||'')}</div><div class="btns"><button class="pill" data-act="sbnow">Sync now</button><button class="pill light" data-act="sbout">Sign out</button></div>`;
- return `<details class="panel" style="margin-top:14px"${sbCfg.url?' open':''}><summary style="cursor:pointer;font-weight:600">Live sync (optional, needs a free Supabase account)</summary>${body}<div class="msg" style="color:${syncState==='error'?'#B3412A':'var(--mut)'}">${esc(syncMsg)}</div></details>`}
+ return `<details class="panel" style="margin-top:14px"${sbCfg.url?' open':''}><summary style="cursor:pointer;font-weight:600">Sync between devices</summary>${body}<div class="msg" style="color:${syncState==='error'?'#B3412A':'var(--mut)'}">${esc(syncMsg)}</div></details>`}
 function vSave(){
  const ok=storageOk(),lb=S.lastBackup;
  const st=(c,t)=>`<div class="stat"><i style="background:${c}"></i>${t}</div>`;
- return `<h1>Save my tracker</h1><p class="sub">Move your plan to your phone with one link and keep a backup.</p>
- <div class="panel" style="margin-top:22px;background:var(--ink);color:#F6F0E4"><h3 style="color:#fff">My link</h3>
+ return `<h1>Save my tracker</h1><p class="sub">Sync your tracker between your phone and computer, and keep a backup.</p>${vSync()}
+ <div class="panel" style="margin-top:14px;background:var(--ink);color:#F6F0E4"><h3 style="color:#fff">My link</h3>
  <p style="font-size:13px;line-height:1.55;margin-top:8px;color:#CFC6B6">This link carries your whole plan: tasks, days and workouts. Copy it, open it on your phone in Safari and add it to your Home Screen. Done.</p>
  <div class="btns"><button class="pill" data-act="copylink" style="background:#F6F0E4;color:var(--ink)">Copy my link</button></div><div class="msg" id="lmsg" style="color:#EBB3D6"></div>
  <details style="margin-top:10px"><summary style="font-size:12px;color:#8C8273;cursor:pointer">Changed your plan later? Paste the new link here</summary><textarea class="bk" id="linkin" placeholder="Paste your link" style="border-color:#3A3633;color:#F6F0E4"></textarea><div class="btns"><button class="pill" data-act="uselink" style="background:#F6F0E4;color:var(--ink)">Load this plan</button></div></details></div>
@@ -731,7 +731,7 @@ function vSave(){
  <div class="panel" style="margin-top:14px"><h3>Backup</h3><p class="sub" style="margin-top:6px">Copy your backup once a week and keep it in Notes. If you change phones or the data ever gets cleared, paste it below and press Restore.</p>
  <div class="btns"><button class="pill" data-act="bkcopy">Copy backup</button><button class="pill light" data-act="bkfile">Download file</button></div>
  <textarea class="bk" id="bkin" placeholder="Paste a backup here to restore"></textarea>
- <div class="btns"><button class="pill light" data-act="bkrestore">Restore</button></div><div class="msg" id="bkmsg"></div></div>${vSync()}`}
+ <div class="btns"><button class="pill light" data-act="bkrestore">Restore</button></div><div class="msg" id="bkmsg"></div></div>`}
 function bkText(){const c=Object.assign({},S);return JSON.stringify(c)}
 function bkMark(){S.lastBackup=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});save()}
 function bkMsg(t,err){const m=document.getElementById('bkmsg');if(m){m.textContent=t;m.style.color=err?'#B3412A':'var(--gd)'}}
