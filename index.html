@@ -314,6 +314,26 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .wf input{width:auto;flex:1;min-width:0}
  .oneoff input#ot{min-width:100%}
 }
+.fg{display:grid;grid-template-columns:72px repeat(var(--n),minmax(0,1fr)) 48px;gap:6px;align-items:center}
+.fhead{margin-bottom:6px}
+.fh{font-size:11px;font-weight:700;color:var(--mut);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frow{padding:3px 0}
+.frow.wsep{border-top:1px dashed var(--line);margin-top:6px;padding-top:9px}
+.fd{font-size:12px;font-weight:700;color:var(--mut)}.fd.t{color:var(--ink)}
+.fc{height:42px;border-radius:12px;background:var(--soft);position:relative;overflow:hidden;cursor:pointer;border:none;padding:0;transition:transform .12s}
+.fc:active{transform:scale(.92)}
+.fc i{position:absolute;left:0;right:0;bottom:0;height:0;transition:height .55s cubic-bezier(.45,0,.2,1),background-color .3s}
+.fc.s1 i,.fc.s2 i{height:100%}
+.fc.s1 i{background:var(--g)}.fc.s2 i{background:var(--p)}
+.fc svg{position:absolute;inset:0;margin:auto;opacity:0;transition:opacity .2s .3s}
+.fc.s1 .k1,.fc.s2 .k2{opacity:1}
+.fmini{height:8px;border-radius:4px;background:var(--soft);overflow:hidden;display:flex}
+.fmini i{display:block;height:100%}
+.fsplit{border-radius:8px;background:var(--soft);overflow:hidden;display:flex}
+.fsplit i{display:block;height:100%;transition:width .6s}
+.flegend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--mut)}
+.flegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+@media(max-width:760px){.fg{grid-template-columns:46px repeat(var(--n),minmax(0,1fr)) 28px;gap:5px}.fc{height:40px;border-radius:11px}.fd{font-size:11px}.fh{font-size:10px}}
 @keyframes pop{50%{transform:scale(1.04)}}
 .pop{animation:pop .35s ease}
 @media(max-width:1180px){.dash{grid-template-columns:1fr}.right{display:grid;grid-template-columns:1fr 1fr;gap:24px}.right .wkl{margin-top:0}}
@@ -393,13 +413,14 @@ if(!S||!S.tasks)S=defaults();
 if(!S.wdays){const old=S.workouts;const sample=!old||(old[0]&&old[0][0]&&old[0][0].n==='Hip thrust'&&old[3]&&old[3][0]&&old[3][0].n==='Lat pulldown');
  if(sample)S.wdays=defaultWdays();else{S.wdays={};for(let i=0;i<7;i++)S.wdays[i]={title:'',blocks:(old[i]||[]).map(e=>({id:e.id,type:'ex',n:e.n,sets:e.sets,reps:e.reps}))}}
  S.tasks=S.tasks.filter(t=>!(t.sp==='body'&&/^workout$/i.test(t.t)));delete S.workouts;try{localStorage.setItem('tracker-v2',JSON.stringify(S))}catch(e){}}
+normalize();
 const localSave=()=>{try{localStorage.setItem('tracker-v2',JSON.stringify(S))}catch(e){}};
 const SB_URL_DEFAULT='https://asabszixbbhfliyghezg.supabase.co',SB_KEY_DEFAULT='sb_publishable_b9BfgqKQduuT1y_3oG22qw_jNNONZHZ';
 let sbCfg={url:'',key:''};try{sbCfg=JSON.parse(localStorage.getItem('tracker-sb'))||sbCfg}catch(e){}
 if(!sbCfg.url&&SB_URL_DEFAULT)sbCfg={url:SB_URL_DEFAULT,key:SB_KEY_DEFAULT};
 let sb=null,sbUser=null,syncState=sbCfg.url?'loading':'off',lastSync=null,pushT=null,syncMsg='';
 const save=()=>{S.updatedAt=Date.now();localSave();schedulePush()};
-function normalize(){if(!S.wdays)S.wdays=defaultWdays();['checks','sets','moods'].forEach(k=>{if(!S[k])S[k]={}});if(!S.weights)S.weights=[];if(!S.tasks)S.tasks=[]}
+function normalize(){if(!S.food)S.food={};if(!Array.isArray(S.meals)||!S.meals.length)S.meals=['Breakfast','Snack','Lunch','Snack','Dinner'];if(!S.wdays)S.wdays=defaultWdays();['checks','sets','moods'].forEach(k=>{if(!S[k])S[k]={}});if(!S.weights)S.weights=[];if(!S.tasks)S.tasks=[]}
 function loadSb(cb){if(window.supabase)return cb();const add=(src,fail)=>{const s=document.createElement('script');s.src=src;s.onload=()=>window.supabase?cb():fail();s.onerror=fail;document.head.appendChild(s)};add('supabase.js',()=>add('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',()=>{syncState='error';syncMsg='Could not load the sync library. Check your internet.';updSync()}))}
 function sbInit(){if(!sbCfg.url||!sbCfg.key)return;loadSb(()=>{try{if(!sb)sb=window.supabase.createClient(sbCfg.url,sbCfg.key,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'tracker-auth'}});
  sb.auth.getSession().then(({data})=>{sbUser=data&&data.session?data.session.user:null;if(sbUser)pull(false);else{syncState='signedout';updSync()}}).catch(e=>{syncState='error';syncMsg=e.message||'Sync error';updSync()})}catch(e){syncState='error';syncMsg=e.message||'Sync error';updSync()}})}
@@ -439,7 +460,7 @@ let justImported=false;
 function applySetup(str){let o;try{o=JSON.parse(b64d(str))}catch(e){return 'bad'}if(!o||!Array.isArray(o.tasks)||!o.wdays)return 'bad';if(o.v&&S.importedV&&o.v<=S.importedV)return 'old';
  S.tasks=o.tasks;S.wdays=o.wdays;if(o.name)S.name=o.name;S.importedV=o.v||Date.now();normalize();save();return 'ok'}
 (function(){const h=location.hash;if(h.indexOf('#setup=')===0){if(applySetup(h.slice(7))==='ok')justImported=true}})();
-let page=['dash','plan','body','everyday','save'].includes(location.hash.slice(1))?location.hash.slice(1):'dash';
+let page=['dash','plan','body','food','everyday','save'].includes(location.hash.slice(1))?location.hash.slice(1):'dash';
 let calM=new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
 let trM=new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
 let bodyDay=dow(TODAY);
@@ -449,6 +470,7 @@ const IC={
  dash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg>',
  plan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
  body:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 20s-7-4.3-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.7-7 10-7 10z"/></svg>',
+ food:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 21V3c-2 1.5-3 4-3 7v3h3"/></svg>',
  everyday:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9.5h16M4 15h16M9.5 4v16M15 4v16"/></svg>',
  save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h9l3 3v13H6z"/><path d="M9 4v5h6V4M9 20v-6h6v6"/></svg>'
 };
@@ -469,7 +491,7 @@ const SHAPE={
 
 function side(){
  const L=(k,t)=>`<a href="#${k}" class="${page===k?'cur':''}">${IC[k]}${t}</a>`;
- return `<div class="logo">tracker<i></i></div><div class="lbl">General</div>${L('dash','Dashboard')}${L('plan','Weekly plan')}${L('body','Body')}${L('everyday','Everyday tracker')}${L('save','Save my tracker')}
+ return `<div class="logo">tracker<i></i></div><div class="lbl">General</div>${L('dash','Dashboard')}${L('plan','Weekly plan')}${L('body','Body')}${L('food','Food')}${L('everyday','Everyday tracker')}${L('save','Save my tracker')}
  <div class="lbl" style="margin-top:22px">Spheres</div>${SPK.map(k=>`<a href="#plan"><span class="dot" style="background:${SP[k].hex}"></span>${SP[k].t}</a>`).join('')}
  <div class="foot"><a href="#save" class="syncst" style="padding:0;color:#8C8273;font-size:12px"><i style="background:${syncColor()}"></i>${syncLabel()}</a></div>`}
 
@@ -663,6 +685,34 @@ function drawSheet(){let el=document.getElementById('sheet');if(!sheet){if(el)el
 function donut(f,size,lbl,inner){const r=size/2-7,C=2*Math.PI*r;
  return `<div class="donut"><svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#EFE7D8" stroke-width="9"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#151413" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C*f} ${C}" transform="rotate(-90 ${size/2} ${size/2})" style="transition:stroke-dasharray .6s"/><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="${size>90?17:14}" font-weight="700" fill="#151413">${inner||pct(f)}</text></svg><span>${lbl}</span></div>`}
 
+let foodM=new Date(TODAY.getFullYear(),TODAY.getMonth(),1),foodEdit=false;
+const FCHK='<svg class="k1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#26300F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const FCHEAT='<svg class="k2" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4A1A38" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M9 9.5h.01M14.5 8.5h.01M15.5 13.5h.01M10 14.5h.01M12.5 11.5h.01"/></svg>';
+function foodStats(days){let c=0,x=0,cd=0,ld=0;days.forEach(d=>{const v=S.food[iso(d)]||[];let a=0,b=0;v.forEach(k=>{if(k===1)a++;else if(k===2)b++});c+=a;x+=b;if(a+b){ld++;if(!b)cd++}});return{c,x,t:c+x,cd,ld}}
+function foodStreak(){let s=0,d=new Date(TODAY);const v0=S.food[iso(d)]||[];if(!v0.some(k=>k))d=addD(d,-1);for(let i=0;i<400;i++){const v=S.food[iso(d)]||[];if(!v.some(k=>k)||v.includes(2))break;s++;d=addD(d,-1)}return s}
+function vFood(){
+ const y=foodM.getFullYear(),m=foodM.getMonth(),n=new Date(y,m+1,0).getDate(),ML=S.meals,N=ML.length;
+ const days=[];for(let d=n;d>=1;d--){const dt=new Date(y,m,d);if(dt<=TODAY)days.push(dt)}
+ const ms=foodStats(days),ws=foodStats(Array.from({length:dow(TODAY)+1},(_,i)=>addD(MON,i))),st=foodStreak();
+ const pc=(a,t)=>t?Math.round(a/t*100):0;
+ const split=(s,h)=>`<div class="fsplit" style="height:${h}px"><i style="width:${s.t?s.c/s.t*100:0}%;background:var(--g)"></i><i style="width:${s.t?s.x/s.t*100:0}%;background:var(--p)"></i></div>`;
+ const rows=days.map(d=>{const ds=iso(d),v=S.food[ds]||[],isT=ds===TI;let a=0,b=0;v.forEach(k=>{if(k===1)a++;else if(k===2)b++});
+  return `<div class="fg frow${dow(d)===6&&!isT?' wsep':''}" style="--n:${N}"><span class="fd${isT?' t':''}">${isT?'Today':DN[dow(d)]+' '+d.getDate()}</span>${ML.map((_,i)=>{const k=v[i]||0;return `<button class="fc s${k}" data-act="food" data-d="${ds}" data-i="${i}" aria-label="${esc(ML[i])}"><i></i>${FCHK}${FCHEAT}</button>`}).join('')}<span class="fmini"><i style="width:${a/N*100}%;background:var(--g)"></i><i style="width:${b/N*100}%;background:var(--p)"></i></span></div>`}).join('');
+ const edit=foodEdit?`<div class="panel" style="margin-top:14px"><h3 style="margin-bottom:10px">Your meals</h3><div style="display:grid;gap:6px">${ML.map((x,i)=>`<input class="nin" style="margin:0" data-meal="${i}" value="${esc(x)}">`).join('')}</div><div class="btns"><button class="pill light" data-act="mealadd">+ Meal</button>${N>1?'<button class="pill light" data-act="mealdel">Remove last</button>':''}<button class="pill" data-act="foodedit">Done</button></div></div>`:'';
+ return `<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap"><div><h1>Food</h1><p class="sub">Tap a meal once for a normal meal, twice for a cheat meal.</p></div>
+ <div class="mnav"><button class="ib" data-act="fmp" aria-label="Previous month"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg></button><span class="pill">${MN[m]} ${y}</span><button class="ib" data-act="fmn" aria-label="Next month"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
+ <div class="panel" style="margin-top:20px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap"><div><span class="big" style="font-size:40px">${pc(ms.c,ms.t)}%</span><span style="font-size:14px;font-weight:600;color:var(--mut)"> normal meals</span></div><span class="mut2">${MN[m]} · ${ms.t} meals logged</span></div>
+ <div style="margin:12px 0 8px">${split(ms,16)}</div>
+ <div class="flegend"><span><i style="background:var(--g)"></i>Normal ${ms.c} · ${pc(ms.c,ms.t)}%</span><span><i style="background:var(--p)"></i>Cheat ${ms.x} · ${pc(ms.x,ms.t)}%</span></div></div>
+ <div class="cons">
+ <div class="c" style="background:var(--g);color:var(--gd)"><span>This week normal</span><b>${ws.t?pc(ws.c,ws.t)+'%':'—'}</b></div>
+ <div class="c" style="background:var(--p);color:var(--pd)"><span>Cheat meals this week</span><b>${ws.x}</b></div>
+ <div class="c" style="background:var(--y);color:var(--yd)"><span>Days without cheats</span><b>${ms.cd}/${ms.ld}</b></div>
+ <div class="c" style="background:var(--b);color:var(--bd)"><span>No-cheat streak</span><b>${st} ${st===1?'day':'days'}</b></div></div>
+ ${edit}
+ <div class="panel" style="margin-top:14px;padding:16px 14px"><div class="fg fhead" style="--n:${N}"><span></span>${ML.map(x=>`<span class="fh">${esc(x)}</span>`).join('')}<span></span></div>
+ ${rows||'<div class="empty">Nothing to log in this month yet</div>'}
+ ${foodEdit?'':'<div class="btns" style="margin-top:12px"><button class="pill light" data-act="foodedit">Edit meals</button></div>'}</div>`}
 function vEveryday(){
  const y=trM.getFullYear(),m=trM.getMonth(),n=new Date(y,m+1,0).getDate();
  const days=[];for(let d=1;d<=n;d++)days.push(new Date(y,m,d));
@@ -738,9 +788,9 @@ function bkMsg(t,err){const m=document.getElementById('bkmsg');if(m){m.textConte
 let restoreArmed=false;
 function render(popSel){
  document.getElementById('side').innerHTML=side();
- document.getElementById('tabbar').innerHTML=[['dash','Today'],['plan','Plan'],['body','Body'],['everyday','Tracker'],['save','Save']].map(([k,l])=>`<a href="#${k}" class="${page===k?'cur':''}">${IC[k]}${l}</a>`).join('');
- document.getElementById('mtitle').textContent={dash:'Dashboard',plan:'Weekly plan',body:'Body',everyday:'Everyday tracker',save:'Save my tracker'}[page];
- document.getElementById('view').innerHTML={dash:vDash,plan:vPlan,body:vBody,everyday:vEveryday,save:vSave}[page]();
+ document.getElementById('tabbar').innerHTML=[['dash','Today'],['plan','Plan'],['body','Body'],['food','Food'],['everyday','Tracker'],['save','Save']].map(([k,l])=>`<a href="#${k}" class="${page===k?'cur':''}">${IC[k]}${l}</a>`).join('');
+ document.getElementById('mtitle').textContent={dash:'Dashboard',plan:'Weekly plan',body:'Body',food:'Food',everyday:'Everyday tracker',save:'Save my tracker'}[page];
+ document.getElementById('view').innerHTML={dash:vDash,plan:vPlan,body:vBody,food:vFood,everyday:vEveryday,save:vSave}[page]();
  const sd=document.getElementById('sdraw');if(sd){sd.getBoundingClientRect();requestAnimationFrame(()=>requestAnimationFrame(()=>sd.style.strokeDashoffset=sd.dataset.to))}
  drawSheet();
  if(page==='everyday'){const sh=document.querySelector('.sheet'),td=sh&&sh.querySelector('th.tdy');if(sh&&td&&sh.scrollWidth>sh.clientWidth)sh.scrollLeft=Math.max(0,td.offsetLeft-sh.clientWidth/2)}
@@ -791,6 +841,12 @@ document.addEventListener('click',e=>{
  if(act==='sbreset'){sbCfg={url:'',key:''};try{localStorage.removeItem('tracker-sb')}catch(e){}sb=null;sbUser=null;syncState='off';syncMsg='';render();return}
  if(act==='copylink'){const l=myLink();const m=document.getElementById('lmsg');const ok=()=>{if(m)m.textContent='Link copied. Send it to your phone (Notes, Telegram, AirDrop) and open it in Safari.'};const fail=()=>{const b=document.getElementById('linkin');const d=b&&b.closest('details');if(d)d.open=true;if(b){b.value=l;b.select()}if(m)m.textContent='Copy the link from the box below.'};try{navigator.clipboard.writeText(l).then(ok,fail)}catch(e){fail()}return}
  if(act==='uselink'){const v=(document.getElementById('linkin').value||'').trim();const i=v.indexOf('#setup=');const m=document.getElementById('lmsg');const r=i<0?'bad':applySetup(v.slice(i+7));if(r==='ok'){render();const m2=document.getElementById('lmsg');if(m2)m2.textContent='Plan loaded.'}else if(m)m.textContent=r==='old'?'You already have this plan or a newer one.':'That doesn\'t look like your tracker link.';return}
+ if(act==='food'){const ds=a.dataset.d,i=+a.dataset.i,N=S.meals.length;const v=S.food[ds]||[];while(v.length<N)v.push(0);v[i]=((v[i]||0)+1)%3;if(v.every(k=>!k))delete S.food[ds];else S.food[ds]=v;if(v[i])buzz();save();a.className='fc s'+v[i];setTimeout(render,650);return}
+ if(act==='fmp'){foodM=new Date(foodM.getFullYear(),foodM.getMonth()-1,1);render();return}
+ if(act==='fmn'){const nx=new Date(foodM.getFullYear(),foodM.getMonth()+1,1);if(nx<=TODAY){foodM=nx;render()}return}
+ if(act==='foodedit'){foodEdit=!foodEdit;render();return}
+ if(act==='mealadd'){if(S.meals.length<8){S.meals.push('Meal '+(S.meals.length+1));save()}render();return}
+ if(act==='mealdel'){if(S.meals.length>1){S.meals.pop();save()}render();return}
  if(act==='menu'){document.getElementById('root').classList.toggle('open');return}
  if(act==='tg'){const k=a.dataset.d+'|'+a.dataset.id;if(S.checks[k])delete S.checks[k];else{S.checks[k]=1;buzz()}save();
   const on=!!S.checks[k];a.classList.toggle('on',on);if(a.classList.contains('cb'))a.style.borderColor=on?SP[S.tasks.find(t=>t.id===a.dataset.id).sp].hex:'';
@@ -812,8 +868,9 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('focusout',e=>{const i=e.target.closest&&e.target.closest('[data-add]');if(!i||!i.value.trim())return;if(addFromInput(i))setTimeout(render,0)});
 document.addEventListener('input',e=>{if(e.target.id==='nt')draft.t=e.target.value;if(e.target.id==='ntime')draft.time=e.target.value});
 let lastMob=isMob();window.addEventListener('resize',()=>{if(isMob()!==lastMob){lastMob=isMob();render()}});
+document.addEventListener('change',e=>{const ml=e.target.closest&&e.target.closest('[data-meal]');if(ml){S.meals[+ml.dataset.meal]=ml.value.trim()||('Meal '+(+ml.dataset.meal+1));save();return}});
 document.addEventListener('change',e=>{const t=e.target.closest&&e.target.closest('[data-wtitle]');if(!t)return;S.wdays[+t.dataset.wtitle].title=t.value.trim();save();render()});
-window.addEventListener('hashchange',()=>{sheet=null;planWk=new Date(MON);planDay=dow(TODAY);wkEdit=false;addType=null;const h=location.hash.slice(1);if(['dash','plan','body','everyday','save'].includes(h)){page=h;document.getElementById('root').classList.remove('open');window.scrollTo(0,0);render()}});
+window.addEventListener('hashchange',()=>{sheet=null;planWk=new Date(MON);planDay=dow(TODAY);wkEdit=false;addType=null;const h=location.hash.slice(1);if(['dash','plan','body','food','everyday','save'].includes(h)){page=h;document.getElementById('root').classList.remove('open');window.scrollTo(0,0);render()}});
 render();
 sbInit();
 </script>
